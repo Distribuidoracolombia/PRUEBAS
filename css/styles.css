@@ -1,0 +1,99 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.test-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.test-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.test-card i {
+    color: #007bff;
+}
+
+/* Estilos modernos para imágenes */
+.question-image-container {
+    margin: 20px 0;
+}
+
+.question-image-container img {
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
+    padding: 8px;
+    background-color: white;
+    max-width: 100%;
+    height: auto;
+}
+
+.question-image-container img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.alert-warning {
+    border-radius: 12px;
+    border-left: 4px solid #ffc107;
+}
+
+.option-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option-item:hover {
+    background-color: #e9ecef;
+}
+
+.option-item.selected {
+    background-color: #cfe2ff;
+    border: 1px solid #007bff;
+}
+
+.option-item.correct {
+    background-color: #d4edda;
+    border: 1px solid #28a745;
+}
+
+.option-item.incorrect {
+    background-color: #f8d7da;
+    border: 1px solid #dc3545;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.test-result {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+
+.test-result h4 {
+    color: #007bff;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}
