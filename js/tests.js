@@ -6,7 +6,7 @@ const tests = {
         questions: [
             {
                 question: "¿Cuál de las siguientes palabras está escrita correctamente?",
-                options: ["Examen", "Exámen", "Examen", "Exsamen"],
+                options: ["Examen", "Exámen", "Excamen", "Exsamen"],
                 correctAnswer: 0
             },
             {
@@ -16,9 +16,9 @@ const tests = {
             },
             {
                 question: "¿Cuál es la forma correcta?",
+                context: "Voy a _____ si puedo resolver este problema.",
                 options: ["Haber", "A ver", "Haver", "Aber"],
-                correctAnswer: 0,
-                context: "Voy a _____ si puedo resolver este problema."
+                correctAnswer: 1
             },
             {
                 question: "Identifica la palabra con error ortográfico:",
@@ -27,8 +27,8 @@ const tests = {
             },
             {
                 question: "¿Cuál es la forma correcta?",
-                options: ["Hay", "Ay", "Ahí", "Ai"],
                 context: "_____ está el libro que buscabas.",
+                options: ["Hay", "Ay", "Ahí", "Ai"],
                 correctAnswer: 2
             },
             {
@@ -53,14 +53,72 @@ const tests = {
             },
             {
                 question: "¿Cuál es la forma correcta?",
-                options: ["A", "Ha", "Ah", "Há"],
                 context: "Él _____ terminado su trabajo.",
+                options: ["A", "Ha", "Ah", "Há"],
                 correctAnswer: 1
             },
             {
                 question: "Selecciona la palabra con la acentuación correcta:",
                 options: ["Fácilmente", "Facilménte", "Fácilménte", "Facilmente"],
                 correctAnswer: 0
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "_____ a comprar pan.",
+                options: ["Valla", "Vaya", "Baya", "Balla"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Ayer", "Alludante", "Alludar", "Hallar"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cuál de las siguientes palabras lleva tilde?",
+                options: ["Arbol", "Cesped", "Lapiz", "Margen"],
+                correctAnswer: 2
+            },
+            {
+                question: "Selecciona la palabra con la acentuación correcta:",
+                options: ["Examén", "Exámen", "Examen", "Éxamen"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "No quiero café _____ té.",
+                options: ["Sino", "Si no", "Sinó", "Sí no"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra con error ortográfico:",
+                options: ["Caballo", "Desarrollo", "Llabe", "Brillante"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Ya he _____ la tarea.",
+                options: ["Hecho", "Echo", "Eko", "Heco"],
+                correctAnswer: 0
+            },
+            {
+                question: "Selecciona la oración con la puntuación correcta:",
+                options: [
+                    "María, compró pan, leche y huevos.",
+                    "María compró, pan, leche y huevos.",
+                    "María compró pan, leche y huevos.",
+                    "María compró pan leche, y huevos."
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál de estas palabras debe llevar tilde?",
+                options: ["Arbol", "Mesa", "Lapiz", "Libro"],
+                correctAnswer: 2
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Vevida", "Bebida", "Bevida", "Bebída"],
+                correctAnswer: 1
             }
         ]
     },
@@ -70,7 +128,7 @@ const tests = {
         questions: [
             {
                 question: "¿Cuál de las siguientes palabras está escrita correctamente?",
-                options: ["Idiosincracia", "Idiosincrasia", "Idiosincracia", "Idiosincrasia"],
+                options: ["Idiosincracia", "Idiosincrasia", "Idiosincracia", "Idiosincrasía"],
                 correctAnswer: 1
             },
             {
@@ -110,8 +168,8 @@ const tests = {
             },
             {
                 question: "¿Cuál de estas palabras está correctamente escrita?",
-                options: ["Eminente", "Inminente", "Iminente", "Emminente"],
                 context: "El peligro era _____.",
+                options: ["Eminente", "Inminente", "Iminente", "Emminente"],
                 correctAnswer: 1
             },
             {
@@ -121,14 +179,76 @@ const tests = {
             },
             {
                 question: "¿Cuál es la forma correcta?",
-                options: ["Adición", "Adicción", "Addicción", "Adisión"],
                 context: "Sufre una _____ a las drogas.",
+                options: ["Adición", "Adicción", "Addicción", "Adisión"],
                 correctAnswer: 1
             },
             {
                 question: "Selecciona la palabra con la acentuación correcta:",
                 options: ["Heróico", "Heroico", "Héroico", "Heroíco"],
                 correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es el plural correcto de 'carácter'?",
+                options: ["Carácteres", "Caracteres", "Carácters", "Caracterés"],
+                correctAnswer: 1
+            },
+            {
+                question: "Selecciona la palabra correctamente escrita:",
+                options: ["Exhuberante", "Exuberante", "Hexuberante", "Exuverante"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Vamos _____ si terminamos a tiempo.",
+                options: ["Haber", "A ver", "Haver", "Aber"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra con error ortográfico:",
+                options: ["Exhaustivo", "Exhuberante", "Exhibición", "Exhortar"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es el uso correcto de 'sino'?",
+                options: [
+                    "No quiero café sino té.",
+                    "No quiero café si no té.",
+                    "No quiero café si nó té.",
+                    "No quiero café sinó té."
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Selecciona la oración con el uso correcto de 'demás' o 'de más':",
+                options: [
+                    "Los demás estudiantes ya se fueron.",
+                    "Los de más estudiantes ya se fueron.",
+                    "Los demas estudiantes ya se fueron.",
+                    "Los de mas estudiantes ya se fueron."
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cuál de estas palabras está correctamente escrita?",
+                options: ["Translúcido", "Traslúcido", "Translucido", "Traslucido"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Absorver", "Absolver", "Absorber", "Abssorber"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Espero que _____ terminado para mañana.",
+                options: ["Halla", "Haya", "Alla", "Aya"],
+                correctAnswer: 1
+            },
+            {
+                question: "Selecciona la palabra con la acentuación correcta:",
+                options: ["Exámen", "Examén", "Examen", "Éxamen"],
+                correctAnswer: 2
             }
         ]
     },
@@ -185,287 +305,284 @@ const tests = {
                 question: "¿Cuál es el atajo de teclado para guardar un archivo en Excel?",
                 options: ["Ctrl+G", "Ctrl+S", "Ctrl+A", "Ctrl+B"],
                 correctAnswer: 1
+            },
+            {
+                question: "¿Qué tecla se usa para editar el contenido de una celda?",
+                options: ["Enter", "F2", "Tab", "Esc"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es la función para calcular el promedio de un rango de celdas?",
+                options: ["PROMEDIO()", "MEDIA()", "AVG()", "PROM()"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Qué combinación de teclas se usa para pegar valores sin formato?",
+                options: ["Ctrl+V", "Alt+V", "Ctrl+Alt+V", "Shift+V"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Qué símbolo se utiliza para multiplicar en una fórmula de Excel?",
+                options: ["x", "*", "·", "×"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es el resultado de la fórmula =10/2+3?",
+                options: ["8", "5", "6.5", "2.5"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué función se utiliza para encontrar el valor más bajo en un rango?",
+                options: ["MIN()", "MENOR()", "BAJO()", "MINIMO()"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cómo se selecciona toda una columna en Excel?",
+                options: [
+                    "Ctrl+Espacio",
+                    "Shift+Espacio",
+                    "Haciendo clic en la letra de la columna",
+                    "Alt+Espacio"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Qué función se utiliza para contar celdas que contienen texto?",
+                options: ["CONTAR.TEXTO()", "CONTARA()", "CONTAR.SI()", "CONTAR()"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué combinación de teclas se usa para guardar como en Excel?",
+                options: ["Ctrl+G", "F12", "Ctrl+S", "Alt+F2"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué hace la función SI() en Excel?",
+                options: [
+                    "Suma valores",
+                    "Evalúa una condición y devuelve un valor si es verdadera y otro si es falsa",
+                    "Cuenta celdas",
+                    "Calcula promedios"
+                ],
+                correctAnswer: 1
             }
         ]
     },
-    // En el objeto excel-intermedio, actualiza las rutas de las imágenes
     "excel-intermedio": {
         title: "Prueba de Excel Intermedio",
-        timeLimit: 900, // 15 minutos
+        timeLimit: 600, // 10 minutos
         questions: [
             {
-                question: "¿Qué función se utiliza para buscar un valor en la primera columna de una tabla y devolver un valor en la misma fila de otra columna?",
-                options: ["BUSCAR()", "BUSCARV()", "COINCIDIR()", "INDICE()"],
-                correctAnswer: 1
-            },
-            {
-                question: "¿Qué función se utiliza para contar celdas que cumplen con un criterio específico?",
-                options: ["CONTAR()", "CONTARA()", "CONTAR.SI()", "CONTAR.BLANCO()"],
-                correctAnswer: 2
-            },
-            {
-                question: "¿Cuál es la función para combinar texto de diferentes celdas?",
-                options: ["UNIR()", "CONCATENAR()", "JUNTAR()", "COMBINAR()"],
-                correctAnswer: 1
-            },
-            {
-                question: "¿Qué función devuelve el número de días entre dos fechas?",
-                options: ["DIAS()", "DIAS.LAB()", "FECHA.DIFF()", "DIAS.ENTRE()"],
+                question: "¿Qué función se utiliza para combinar rangos y aplicar criterios múltiples?",
+                options: ["Y()", "O()", "SI.CONJUNTO()", "SI.MULTIPLE()"],
                 correctAnswer: 0
             },
             {
-                question: "¿Qué hace la función SI.ERROR()?",
+                question: "¿Qué hace la función SUMAR.SI()?",
                 options: [
-                    "Muestra un mensaje de error personalizado",
-                    "Evita que se muestren errores en las fórmulas",
-                    "Comprueba si una celda contiene un error",
-                    "Corrige automáticamente errores en fórmulas"
+                    "Suma todos los valores de un rango",
+                    "Suma valores que cumplen con un criterio específico",
+                    "Suma si el resultado es positivo",
+                    "Suma valores duplicados"
                 ],
                 correctAnswer: 1
             },
             {
-                question: "¿Qué función se utiliza para redondear un número al entero más cercano?",
-                options: ["REDONDEAR()", "REDONDEAR.MAS()", "ENTERO()", "REDONDEAR.MENOS()"],
+                question: "¿Qué es una referencia mixta en Excel?",
+                options: [
+                    "Una referencia que incluye texto y números",
+                    "Una referencia que combina celdas absolutas y relativas",
+                    "Una referencia a múltiples hojas",
+                    "Una referencia a una tabla dinámica"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué función se utiliza para buscar un valor en una matriz y devolver un valor de la misma fila pero en una columna diferente?",
+                options: ["BUSCAR()", "BUSCARV()", "INDICE()", "COINCIDIR()"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué hace la función CONCATENAR()?",
+                options: [
+                    "Divide texto en columnas",
+                    "Une texto de diferentes celdas",
+                    "Convierte texto a mayúsculas",
+                    "Elimina espacios en blanco"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué función se utiliza para eliminar espacios en blanco al inicio y final de un texto?",
+                options: ["ESPACIOS()", "RECORTAR()", "LIMPIAR()", "ESPACIO()"],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué es una validación de datos en Excel?",
+                options: [
+                    "Una fórmula que verifica si los datos son correctos",
+                    "Una restricción que limita qué tipo de datos pueden ingresarse en una celda",
+                    "Un formato condicional que resalta errores",
+                    "Una función que corrige automáticamente errores de datos"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué función se utiliza para convertir texto a mayúsculas?",
+                options: ["MAYUSC()", "SUPERIOR()", "MAYUSCULAS()", "CONVERTIR()"],
                 correctAnswer: 0
             },
             {
-                question: "¿Qué es una tabla dinámica?",
+                question: "¿Qué es un formato condicional en Excel?",
                 options: [
-                    "Una tabla que cambia automáticamente sus valores",
-                    "Una herramienta para ordenar datos",
-                    "Una herramienta para resumir y analizar datos",
-                    "Una tabla con fórmulas dinámicas"
-                ],
-                correctAnswer: 2
-            },
-            {
-                question: "¿Qué función se utiliza para extraer una parte específica de un texto?",
-                options: ["EXTRAER()", "IZQUIERDA()", "DERECHA()", "EXTRAE()"],
-                correctAnswer: 3
-            },
-            {
-                question: "¿Qué función se utiliza para encontrar un valor en un rango de celdas y devolver su posición relativa?",
-                options: ["BUSCARV()", "INDICE()", "COINCIDIR()", "BUSCARH()"],
-                correctAnswer: 2
-            },
-            {
-                question: "¿Qué tipo de referencia no cambia cuando se copia una fórmula?",
-                options: [
-                    "Referencia relativa",
-                    "Referencia absoluta",
-                    "Referencia mixta",
-                    "Referencia dinámica"
+                    "Un formato que se aplica solo a ciertas celdas",
+                    "Un formato que cambia automáticamente según el contenido de la celda",
+                    "Un formato que solo se aplica a números",
+                    "Un formato que se aplica solo a fechas"
                 ],
                 correctAnswer: 1
             },
             {
-                question: "¿Qué tipo de gráfico es mejor para mostrar la contribución de cada valor a un total?",
-                options: [
-                    "Gráfico de barras",
-                    "Gráfico de líneas",
-                    "Gráfico circular (pie)",
-                    "Gráfico de dispersión"
-                ],
-                correctAnswer: 2,
-                image: "./img/chart-pie.png" // Cambiado a ruta relativa
-            },
-            {
-                question: "¿Qué tipo de gráfico es más adecuado para mostrar tendencias a lo largo del tiempo?",
-                options: [
-                    "Gráfico de barras",
-                    "Gráfico de líneas",
-                    "Gráfico circular (pie)",
-                    "Gráfico de radar"
-                ],
-                correctAnswer: 1,
-                image: "./img/chart-line.png" // Cambiado a ruta relativa
-            },
-            {
-                question: "¿Cómo se llama el elemento que muestra la relación entre los colores y los valores en un gráfico?",
-                options: [
-                    "Título",
-                    "Leyenda",
-                    "Etiqueta de datos",
-                    "Eje"
-                ],
-                correctAnswer: 1
-            },
-            {
-                question: "¿Qué tipo de gráfico es mejor para comparar valores entre diferentes categorías?",
-                options: [
-                    "Gráfico de barras",
-                    "Gráfico de líneas",
-                    "Gráfico circular (pie)",
-                    "Gráfico de área"
-                ],
-                correctAnswer: 0,
-                image: "./img/chart-bar.png" // Cambiado a ruta relativa
-            },
-            {
-                question: "¿Qué función se utiliza para crear un gráfico dinámico basado en una tabla dinámica?",
-                options: [
-                    "Insertar gráfico",
-                    "Crear gráfico dinámico",
-                    "Gráfico de tabla dinámica",
-                    "Análisis de datos"
-                ],
-                correctAnswer: 2
+                question: "¿Qué función se utiliza para calcular el pago de un préstamo con interés y pagos constantes?",
+                options: ["PAGO()", "PRESTAMO()", "AMORTIZACION()", "INTERES()"],
+                correctAnswer: 0
             }
         ]
-    },    "cajera-pdv": {
-    title: "Prueba para Cajera de Punto de Venta",
-    timeLimit: 600, // 10 minutos
-    questions: [
-        {
-            question: "¿Cuál es el procedimiento correcto al recibir un pago con tarjeta de crédito?",
-            options: [
-                "Solicitar la tarjeta y pasarla por el datáfono sin verificar identidad",
-                "Solicitar la tarjeta y documento de identidad, verificar que coincidan, y luego procesar el pago",
-                "Pedir solo el documento de identidad y procesar el pago",
-                "Aceptar cualquier tarjeta sin verificación si el monto es menor a $500.000"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "Un cliente desea comprar una nevera de $1.800.000 y tiene un cupón de descuento del 15%. ¿Cuál es el monto final a cobrar?",
-            options: [
-                "$1.530.000",
-                "$1.650.000",
-                "$1.700.000",
-                "$1.550.000"
-            ],
-            correctAnswer: 0
-        },
-        {
-            question: "¿Qué información debe contener una factura de venta de una motocicleta?",
-            options: [
-                "Solo el valor y la marca de la moto",
-                "Valor, marca, modelo y color",
-                "Valor, marca, modelo, número de chasis, número de motor y especificaciones técnicas",
-                "Solo el valor con IVA incluido"
-            ],
-            correctAnswer: 2
-        },
-        {
-            question: "Un cliente compra una lavadora de $1.200.000 y un televisor de $900.000. Si paga en efectivo tiene un 5% de descuento. ¿Cuánto debe pagar?",
-            options: [
-                "$2.100.000",
-                "$1.995.000",
-                "$2.000.000",
-                "$1.900.000"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "¿Qué debe hacer si el sistema de punto de venta deja de funcionar durante una transacción?",
-            options: [
-                "Pedir al cliente que regrese más tarde",
-                "Realizar la venta manualmente con factura física, registrando todos los detalles necesarios",
-                "Cancelar la venta",
-                "Procesar el pago sin factura y emitirla después"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "¿Cuál es el procedimiento para aplicar una garantía en un electrodoméstico?",
-            options: [
-                "Simplemente cambiar el producto sin verificación",
-                "Solicitar la factura, verificar fecha de compra, revisar condiciones de garantía y procesar según políticas",
-                "Negar la garantía si han pasado más de 15 días",
-                "Solicitar autorización del gerente en todos los casos"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "Un cliente desea financiar una moto de $8.000.000. Da un inicial del 20% y financia el resto a 36 meses. ¿Cuánto es el monto a financiar?",
-            options: [
-                "$6.400.000",
-                "$1.600.000",
-                "$8.000.000",
-                "$4.000.000"
-            ],
-            correctAnswer: 0
-        },
-        {
-            question: "¿Qué información debe verificar al recibir un cheque como forma de pago?",
-            options: [
-                "Solo el monto y la firma",
-                "Monto, firma, fecha, beneficiario y que no tenga tachones ni enmendaduras",
-                "Solo que el cheque esté firmado",
-                "No se aceptan cheques como forma de pago"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "Al realizar el cierre de caja, hay un faltante de $50.000. ¿Cuál es el procedimiento correcto?",
-            options: [
-                "Ignorar el faltante si es una cantidad pequeña",
-                "Registrar el faltante, reportarlo al supervisor y documentar en el formato de cierre de caja",
-                "Reponer el dinero sin informar a nadie",
-                "Ajustar las ventas para que cuadre la caja"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "¿Qué debe hacer cuando un cliente solicita la devolución de un electrodoméstico?",
-            options: [
-                "Negar todas las devoluciones",
-                "Aceptar la devolución sin hacer preguntas",
-                "Verificar la factura, el estado del producto, el motivo de devolución y proceder según políticas de la empresa",
-                "Ofrecer solo cambio por otro producto"
-            ],
-            correctAnswer: 2
-        },
-        {
-            question: "Un cliente compra repuestos para moto por valor de $320.000. Si paga con tarjeta de crédito a 6 cuotas con un interés del 2% mensual, ¿cuál es el valor total que pagará?",
-            options: [
-                "$320.000",
-                "$352.000",
-                "$358.400",
-                "$384.000"
-            ],
-            correctAnswer: 3
-        },
-        {
-            question: "¿Qué información debe solicitar para registrar a un cliente en el sistema?",
-            options: [
-                "Solo nombre y teléfono",
-                "Nombre, documento de identidad, dirección, teléfono y correo electrónico",
-                "Solo documento de identidad",
-                "Nombre, dirección y fecha de nacimiento"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "¿Cuál es el procedimiento para manejar una reclamación por un producto defectuoso?",
-            options: [
-                "Pedir al cliente que contacte directamente al fabricante",
-                "Negar la reclamación si el producto ha sido usado",
-                "Escuchar al cliente, documentar el problema, verificar la garantía y seguir el protocolo de servicio técnico",
-                "Cambiar inmediatamente el producto sin verificación"
-            ],
-            correctAnswer: 2
-        },
-        {
-            question: "¿Qué debe hacer si detecta un billete falso durante una transacción?",
-            options: [
-                "Aceptarlo para evitar conflictos y luego reportarlo",
-                "Rechazarlo discretamente, informar al cliente y solicitar otra forma de pago",
-                "Retener el billete sin informar al cliente",
-                "Aceptarlo pero con un recargo adicional"
-            ],
-            correctAnswer: 1
-        },
-        {
-            question: "¿Cuál es la mejor manera de manejar una fila larga de clientes en caja?",
-            options: [
-                "Atender rápidamente sin verificar bien los pagos",
-                "Mantener la calma, ser eficiente, solicitar apoyo si está disponible y agradecer a los clientes por su paciencia",
-                "Cerrar la caja temporalmente",
-                "Atender solo a los clientes que compren productos de alto valor"
-            ],
-            correctAnswer: 1
-        }
-    ]
+    },
+    "cajera-pdv": {
+        title: "Prueba para Cajera de Punto de Venta",
+        timeLimit: 600, // 10 minutos
+        questions: [
+            {
+                question: "¿Qué información debe verificar en una tarjeta de crédito antes de procesarla?",
+                options: [
+                    "Solo el nombre del titular",
+                    "Nombre del titular, fecha de vencimiento y que la tarjeta esté firmada",
+                    "Solo la fecha de vencimiento",
+                    "Solo el número de la tarjeta"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Un cliente compra productos por $85.000 y tiene un cupón de 10% de descuento. ¿Cuánto debe pagar?",
+                options: ["$76.500", "$75.000", "$80.000", "$77.500"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Qué debe hacer si un cliente solicita factura con datos fiscales?",
+                options: [
+                    "Emitir una factura normal",
+                    "Solicitar los datos fiscales completos y emitir una factura con esos datos",
+                    "Decir que no es posible emitir ese tipo de factura",
+                    "Pedir que regrese otro día"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es el procedimiento correcto para una devolución de dinero?",
+                options: [
+                    "Devolver el dinero sin preguntar",
+                    "Verificar el producto, la factura, registrar la devolución en el sistema y devolver el dinero por el mismo medio de pago original",
+                    "Negar todas las devoluciones",
+                    "Ofrecer solo cambio por otro producto"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer si el sistema indica que un producto tiene descuento pero el cliente dice que el descuento debería ser mayor?",
+                options: [
+                    "Aplicar el descuento que pide el cliente",
+                    "Verificar en el sistema o con el supervisor el descuento correcto y explicar amablemente al cliente",
+                    "Ignorar al cliente y cobrar sin descuento",
+                    "Llamar a seguridad"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cómo debe manejar un reclamo de un cliente insatisfecho?",
+                options: [
+                    "Ignorarlo y seguir atendiendo a otros clientes",
+                    "Escuchar atentamente, mostrar empatía, ofrecer una solución y, si es necesario, llamar a un supervisor",
+                    "Discutir con el cliente para demostrar que está equivocado",
+                    "Pedir al cliente que se retire"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer al final de su turno con el dinero de la caja?",
+                options: [
+                    "Llevárselo a casa y entregarlo al día siguiente",
+                    "Contar el dinero, cuadrar la caja, llenar el formato de cierre y entregar al supervisor",
+                    "Dejarlo en la caja para el siguiente turno",
+                    "Depositarlo en su cuenta bancaria"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué información debe incluir un recibo de venta?",
+                options: [
+                    "Solo el monto total",
+                    "Fecha, productos, precios, subtotal, impuestos, total y forma de pago",
+                    "Solo los productos y el precio",
+                    "Solo la fecha y el monto"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Un cliente compra una moto de $12.000.000 y quiere financiar el 70%. ¿Cuánto debe pagar como inicial?",
+                options: ["$3.600.000", "$8.400.000", "$4.000.000", "$5.000.000"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Qué debe hacer si detecta que un producto no tiene código de barras o precio?",
+                options: [
+                    "Asignarle cualquier precio",
+                    "No vender el producto",
+                    "Consultar el precio con el departamento correspondiente antes de procesarlo",
+                    "Regalarlo al cliente"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Qué debe hacer si un cliente olvida su cambio o tarjeta de crédito?",
+                options: [
+                    "Quedarse con el dinero o destruir la tarjeta",
+                    "Guardar el cambio o tarjeta, registrarlo en el sistema y notificar al supervisor",
+                    "Usar el dinero para cuadrar la caja",
+                    "No hacer nada, es responsabilidad del cliente"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es la mejor forma de organizar los billetes en la caja?",
+                options: [
+                    "Todos mezclados",
+                    "Ordenados por denominación y con los billetes en la misma dirección",
+                    "Solo separar billetes grandes de pequeños",
+                    "No importa mientras estén dentro de la caja"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer si un cliente quiere pagar parte en efectivo y parte con tarjeta?",
+                options: [
+                    "No aceptar este tipo de pago",
+                    "Procesar primero el pago en efectivo, luego el de tarjeta y registrar ambos en el sistema",
+                    "Pedir que elija solo una forma de pago",
+                    "Cobrar todo en efectivo y quedarse con la diferencia"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué información debe solicitar para una venta a crédito de un electrodoméstico?",
+                options: [
+                    "Solo el nombre del cliente",
+                    "Documento de identidad, comprobantes de ingresos, referencias y completar la solicitud de crédito",
+                    "Solo un número de teléfono",
+                    "Solo la dirección del cliente"
+                ],
+                correctAnswer: 1
+            }
+        ]
+    }
 }
-};
