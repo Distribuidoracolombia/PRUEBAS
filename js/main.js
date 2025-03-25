@@ -246,6 +246,8 @@ function updateTimerDisplay() {
 
 // Finalizar prueba
 function finishTest() {
+    console.log("Finalizando prueba..."); // Añadir log para depuración
+    
     // Detener el temporizador
     if (testTimer) {
         clearInterval(testTimer);
@@ -386,7 +388,7 @@ function showQuestion() {
             if (currentQuestionIndex < currentTest.questions.length - 1) {
                 document.getElementById('next-question').disabled = false;
             } else {
-                document.getElementById('finish-test').disabled = false;
+                document.getElementById('finish-test').disabled = false; // Asegurarse de que se habilite
             }
         });
         
@@ -412,7 +414,7 @@ function showQuestion() {
     } else {
         nextButton.classList.add('d-none');
         finishButton.classList.remove('d-none');
-        finishButton.disabled = true;
+        finishButton.disabled = true; // Aquí está el problema, siempre se deshabilita
     }
     
     // Si hay una respuesta guardada para esta pregunta, seleccionarla
@@ -425,7 +427,7 @@ function showQuestion() {
             if (currentQuestionIndex < currentTest.questions.length - 1) {
                 nextButton.disabled = false;
             } else {
-                finishButton.disabled = false;
+                finishButton.disabled = false; // Habilitar el botón finalizar si hay una respuesta guardada
             }
         }
     }
