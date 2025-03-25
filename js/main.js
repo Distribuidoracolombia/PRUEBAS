@@ -15,6 +15,8 @@ let timeRemaining = 0;
 
 // Elementos DOM
 document.addEventListener('DOMContentLoaded', function() {
+     initApp();
+    
     // Inicializar EmailJS
     initEmailJS();
     
