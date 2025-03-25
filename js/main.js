@@ -3,6 +3,7 @@ let userData = {
     fullName: '',
     position: '',
     cc: '',
+    documentType: 'cc',
     testResults: {}
 };
 
@@ -17,13 +18,49 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar EmailJS
     initEmailJS();
     
+    // Configurar validación de documento según tipo
+    setupDocumentValidation();
+    
     // Formulario de registro
     const userForm = document.getElementById('user-form');
     userForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        userData.fullName = document.getElementById('fullname').value;
-        userData.position = document.getElementById('position').value;
-        userData.cc = document.getElementById('cc').value;
+        
+        const fullname = document.getElementById('fullname').value.trim();
+        const documentType = document.getElementById('document-type').value;
+        const documentNumber = document.getElementById('cc').value.trim();
+        const position = document.getElementById('position').value.trim();
+        
+        // Validar campos
+        if (!fullname || !documentNumber || !position) {
+            alert('Por favor, complete todos los campos');
+            return;
+        }
+        
+        // Validar formato del documento según su tipo
+        if (!validarDocumento(documentType, documentNumber)) {
+            let mensaje = 'El formato del documento no es válido. ';
+            
+            switch(documentType) {
+                case 'cc':
+                    mensaje += 'La cédula de ciudadanía debe tener entre 8 y 10 dígitos numéricos.';
+                    break;
+                case 'ce':
+                    mensaje += 'La cédula de extranjería debe tener entre 6 y 12 caracteres alfanuméricos.';
+                    break;
+                case 'pasaporte':
+                    mensaje += 'El pasaporte debe tener 2 letras seguidas de 6-7 dígitos.';
+                    break;
+            }
+            
+            alert(mensaje);
+            return;
+        }
+        
+        userData.fullName = fullname;
+        userData.position = position;
+        userData.cc = documentNumber;
+        userData.documentType = documentType;
         
         // Verificar si el usuario ya ha realizado pruebas
         const existingUserData = checkExistingUser(userData.cc);
@@ -117,8 +154,21 @@ function startTest(testId) {
         return;
     }
     
-    console.log(`Iniciando prueba: ${testId}`);
-    currentTest = tests[testId];
+    // Obtener todas las preguntas disponibles para este test
+    const allQuestions = tests[testId].questions;
+    
+    // Seleccionar aleatoriamente 15 preguntas (o menos si no hay suficientes)
+    const questionCount = Math.min(15, allQuestions.length);
+    const shuffledQuestions = shuffleArray([...allQuestions]);
+    const selectedQuestions = shuffledQuestions.slice(0, questionCount);
+    
+    // Crear una copia del test con solo las preguntas seleccionadas
+    currentTest = {
+        ...tests[testId],
+        questions: selectedQuestions,
+        originalQuestionCount: allQuestions.length
+    };
+    
     currentQuestionIndex = 0;
     userAnswers = [];
     
@@ -137,7 +187,7 @@ function startTest(testId) {
             alert("¡Se acabó el tiempo!");
             finishTest();
         }
-    }, 1000); // Cambiado de 100 a 1000 para que el tiempo sea correcto
+    }, 1000);
     
     // Actualizar título de la prueba
     document.getElementById('test-title').textContent = currentTest.title;
@@ -148,6 +198,15 @@ function startTest(testId) {
     
     // Mostrar primera pregunta
     showQuestion();
+}
+
+// Función para mezclar un array (algoritmo Fisher-Yates)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 // Actualizar el temporizador en la interfaz
@@ -183,11 +242,12 @@ function finishTest() {
     const score = Math.round((correctAnswers / currentTest.questions.length) * 100);
     
     // Guardar resultados
-    const testId = Object.keys(tests).find(key => tests[key] === currentTest);
+    const testId = Object.keys(tests).find(key => tests[key].title === currentTest.title);
     userData.testResults[testId] = {
         score: score,
         correctAnswers: correctAnswers,
         totalQuestions: currentTest.questions.length,
+        questionsFromPool: currentTest.originalQuestionCount,
         date: new Date().toLocaleDateString()
     };
     
@@ -332,4 +392,106 @@ function nextQuestion() {
     // Avanzar a la siguiente pregunta
     currentQuestionIndex++;
     showQuestion();
+}
+
+// Configurar validación de documento
+function setupDocumentValidation() {
+    const documentTypeSelect = document.getElementById('document-type');
+    const documentInput = document.getElementById('cc');
+    const documentHelp = document.getElementById('document-help');
+    
+    if (documentTypeSelect && documentInput) {
+        // Cambiar placeholder según tipo de documento
+        documentTypeSelect.addEventListener('change', function() {
+            switch(this.value) {
+                case 'cc':
+                    documentInput.placeholder = 'Ej: 1234567890';
+                    break;
+                case 'ce':
+                    documentInput.placeholder = 'Ej: E123456';
+                    break;
+                case 'pasaporte':
+                    documentInput.placeholder = 'Ej: AB123456';
+                    break;
+            }
+            
+            // Limpiar mensajes de error previos
+            clearValidationMessages();
+        });
+        
+        // Validar en tiempo real mientras el usuario escribe
+        documentInput.addEventListener('input', function() {
+            const documentType = documentTypeSelect.value;
+            const documentValue = this.value.trim();
+            
+            // Limpiar mensajes de error previos
+            clearValidationMessages();
+            
+            if (documentValue && !validarDocumento(documentType, documentValue)) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                
+                // Mostrar mensaje de error específico
+                let errorMessage = '';
+                switch(documentType) {
+                    case 'cc':
+                        errorMessage = 'Debe tener entre 8 y 10 dígitos numéricos';
+                        break;
+                    case 'ce':
+                        errorMessage = 'Debe tener entre 6 y 12 caracteres alfanuméricos';
+                        break;
+                    case 'pasaporte':
+                        errorMessage = 'Debe tener 2 letras seguidas de 6-7 dígitos';
+                        break;
+                }
+                
+                // Crear mensaje de error
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = 'invalid-feedback';
+                feedbackElement.textContent = errorMessage;
+                feedbackElement.id = 'document-error';
+                this.parentNode.appendChild(feedbackElement);
+            } else if (documentValue) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.remove('is-valid');
+            }
+        });
+        
+        // Establecer placeholder inicial
+        documentTypeSelect.dispatchEvent(new Event('change'));
+    }
+}
+
+// Función para limpiar mensajes de validación
+function clearValidationMessages() {
+    // Eliminar todos los mensajes de error existentes
+    const existingErrors = document.querySelectorAll('.invalid-feedback');
+    existingErrors.forEach(element => element.remove());
+}
+
+// Función para validar el documento según su tipo
+function validarDocumento(tipo, numero) {
+    // Eliminar espacios y guiones
+    numero = numero.replace(/[\s-]/g, '');
+    
+    switch(tipo) {
+        case 'cc': // Cédula de ciudadanía colombiana
+            // Debe ser numérica y tener entre 8 y 10 dígitos
+            return /^\d{8,10}$/.test(numero);
+        
+        case 'ce': // Cédula de extranjería
+            // Debe comenzar con letra o número y tener entre 6 y 12 caracteres
+            return /^[a-zA-Z0-9]{6,12}$/.test(numero);
+        
+        case 'pasaporte':
+            // Formato típico: 2 letras seguidas de 6-7 dígitos
+            return /^[a-zA-Z]{2}[0-9]{6,7}$/.test(numero);
+            
+        default:
+            // Si no se especifica tipo, al menos debe tener 6 caracteres
+            return numero.length >= 6;
+    }
 }

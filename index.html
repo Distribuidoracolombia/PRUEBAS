@@ -22,8 +22,19 @@
                         <input type="text" class="form-control" id="fullname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="cc" class="form-label">Cédula de Ciudadanía</label>
+                        <label for="document-type" class="form-label">Tipo de documento</label>
+                        <select class="form-select" id="document-type">
+                            <option value="cc">Cédula de Ciudadanía</option>
+                            <option value="ce">Cédula de Extranjería</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cc" class="form-label">Número de documento</label>
                         <input type="text" class="form-control" id="cc" required>
+                        <div class="form-text" id="document-help">
+                            CC: 8-10 dígitos | CE: 6-12 caracteres | Pasaporte: 2 letras + 6-7 dígitos
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="position" class="form-label">Cargo</label>
