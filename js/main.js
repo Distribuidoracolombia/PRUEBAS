@@ -13,6 +13,20 @@ let userAnswers = [];
 let testTimer = null;
 let timeRemaining = 0;
 
+// Función para borrar todas las cookies
+function borrarTodasLasCookies() {
+    const cookies = document.cookie.split(";");
+    
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const nombre = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = nombre + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+    
+    console.log("Todas las cookies han sido borradas");
+}
+
 // Elementos DOM
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar EmailJS
@@ -103,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Botones de navegación
     document.getElementById('next-question').addEventListener('click', nextQuestion);
+    document.getElementById('prev-question').addEventListener('click', prevQuestion); // Añadir evento para botón anterior
     document.getElementById('finish-test').addEventListener('click', finishTest);
     document.getElementById('view-results').addEventListener('click', showResults);
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
@@ -144,7 +159,6 @@ function saveAllUsersData() {
     localStorage.setItem('allUsers', JSON.stringify(allUsers));
 }
 
-// Iniciar prueba
 // Iniciar prueba
 function startTest(testId) {
     // Asegurarse de que estamos cargando el test correcto
@@ -195,6 +209,19 @@ function startTest(testId) {
     // Ocultar menú y mostrar área de prueba
     document.getElementById('test-menu').classList.add('d-none');
     document.getElementById('test-area').classList.remove('d-none');
+    
+    // Crear botón "Anterior" si no existe
+    if (!document.getElementById('prev-question')) {
+        const prevButton = document.createElement('button');
+        prevButton.id = 'prev-question';
+        prevButton.className = 'btn btn-secondary me-2 d-none';
+        prevButton.textContent = 'Anterior';
+        prevButton.addEventListener('click', prevQuestion);
+        
+        // Insertar antes del botón "Siguiente"
+        const nextButton = document.getElementById('next-question');
+        nextButton.parentNode.insertBefore(prevButton, nextButton);
+    }
     
     // Mostrar primera pregunta
     showQuestion();
@@ -367,8 +394,16 @@ function showQuestion() {
     });
     
     // Mostrar/ocultar botones según la pregunta actual
+    const prevButton = document.getElementById('prev-question');
     const nextButton = document.getElementById('next-question');
     const finishButton = document.getElementById('finish-test');
+    
+    // Habilitar/deshabilitar botón anterior
+    if (currentQuestionIndex > 0) {
+        prevButton.classList.remove('d-none');
+    } else {
+        prevButton.classList.add('d-none');
+    }
     
     if (currentQuestionIndex < currentTest.questions.length - 1) {
         nextButton.classList.remove('d-none');
@@ -378,6 +413,21 @@ function showQuestion() {
         nextButton.classList.add('d-none');
         finishButton.classList.remove('d-none');
         finishButton.disabled = true;
+    }
+    
+    // Si hay una respuesta guardada para esta pregunta, seleccionarla
+    if (userAnswers[currentQuestionIndex] !== undefined) {
+        const savedOption = document.querySelector(`.option-item[data-index="${userAnswers[currentQuestionIndex]}"]`);
+        if (savedOption) {
+            savedOption.classList.add('selected');
+            
+            // Habilitar botones según corresponda
+            if (currentQuestionIndex < currentTest.questions.length - 1) {
+                nextButton.disabled = false;
+            } else {
+                finishButton.disabled = false;
+            }
+        }
     }
 }
 
@@ -392,6 +442,21 @@ function nextQuestion() {
     // Avanzar a la siguiente pregunta
     currentQuestionIndex++;
     showQuestion();
+}
+
+// Volver a la pregunta anterior
+function prevQuestion() {
+    // Guardar respuesta del usuario actual antes de retroceder
+    const selectedOption = document.querySelector('.option-item.selected');
+    if (selectedOption) {
+        userAnswers[currentQuestionIndex] = parseInt(selectedOption.getAttribute('data-index'));
+    }
+    
+    // Retroceder a la pregunta anterior
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+    }
 }
 
 // Configurar validación de documento
@@ -495,3 +560,4 @@ function validarDocumento(tipo, numero) {
             return numero.length >= 6;
     }
 }
+
