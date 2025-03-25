@@ -1,21 +1,19 @@
-// Variables globales
-let userData = {
-    fullName: '',
-    position: '',
-    cc: '',
-    documentType: 'cc',
-    testResults: {}
-};
-
 let currentTest = null;
 let currentQuestionIndex = 0;
 let userAnswers = [];
-let testTimer = null;
+let testTitle = null;
 let timeRemaining = 0;
 
 // Elementos DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar la aplicación
+    // Define la función initApp
+    function initApp() {
+        // Tu código de inicialización aquí
+        console.log("Aplicación inicializada");
+        // Agrega tu lógica de inicialización
+    }
+    
+    // Llama a la función
     initApp();
     
     // Inicializar EmailJS
