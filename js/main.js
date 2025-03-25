@@ -117,8 +117,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Botones de navegación
     document.getElementById('next-question').addEventListener('click', nextQuestion);
-    document.getElementById('prev-question').addEventListener('click', prevQuestion); // Añadir evento para botón anterior
-    document.getElementById('finish-test').addEventListener('click', finishTest);
+    
+    // Verificar si existe el botón 'prev-question' antes de añadir el evento
+    const prevButton = document.getElementById('prev-question');
+    if (prevButton) {
+        prevButton.addEventListener('click', prevQuestion);
+    }
+    // El botón 'prev-question' se crea dinámicamente en startTest() si no existe
+    
+    // Asegurarse de que el botón finalizar tenga un evento de clic correctamente asignado
+    const finishButton = document.getElementById('finish-test');
+    if (finishButton) {
+        // Eliminar cualquier evento anterior para evitar duplicados
+        finishButton.removeEventListener('click', finishTest);
+        // Añadir el evento de clic
+        finishButton.addEventListener('click', finishTest);
+        console.log("Evento de clic asignado al botón finalizar");
+    } else {
+        console.error("No se encontró el botón finalizar");
+    }
+    
     document.getElementById('view-results').addEventListener('click', showResults);
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
     document.getElementById('download-results').addEventListener('click', downloadResults);
@@ -244,90 +262,6 @@ function updateTimerDisplay() {
         `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Finalizar prueba
-function finishTest() {
-    console.log("Finalizando prueba..."); // Añadir log para depuración
-    
-    // Detener el temporizador
-    if (testTimer) {
-        clearInterval(testTimer);
-        testTimer = null;
-    }
-    
-    // Guardar última respuesta
-    const selectedOption = document.querySelector('.option-item.selected');
-    if (selectedOption) {
-        userAnswers[currentQuestionIndex] = parseInt(selectedOption.getAttribute('data-index'));
-    }
-    
-    // Calcular resultados
-    let correctAnswers = 0;
-    userAnswers.forEach((answer, index) => {
-        if (answer === currentTest.questions[index].correctAnswer) {
-            correctAnswers++;
-        }
-    });
-    
-    const score = Math.round((correctAnswers / currentTest.questions.length) * 100);
-    
-    // Guardar resultados
-    const testId = Object.keys(tests).find(key => tests[key].title === currentTest.title);
-    userData.testResults[testId] = {
-        score: score,
-        correctAnswers: correctAnswers,
-        totalQuestions: currentTest.questions.length,
-        questionsFromPool: currentTest.originalQuestionCount,
-        date: new Date().toLocaleDateString()
-    };
-    
-    // Guardar en localStorage
-    saveResults();
-    saveAllUsersData();
-    
-    // Volver al menú
-    document.getElementById('test-area').classList.add('d-none');
-    document.getElementById('test-menu').classList.remove('d-none');
-    
-    // Actualizar estado de las tarjetas de prueba
-    updateTestCardStatus();
-    
-    // Mostrar botón de resultados si hay al menos una prueba completada
-    if (Object.keys(userData.testResults).length > 0) {
-        document.getElementById('view-results').classList.remove('d-none');
-    }
-}
-
-// Mostrar resultados
-function showResults() {
-    // Mostrar información del usuario
-    document.getElementById('result-name').textContent = userData.fullName;
-    document.getElementById('result-position').textContent = userData.position;
-    document.getElementById('result-date').textContent = new Date().toLocaleDateString();
-    
-    // Mostrar resultados de pruebas
-    const resultsContainer = document.getElementById('results-container');
-    resultsContainer.innerHTML = generateDetailedReport();
-    
-    // Ocultar menú y mostrar resultados
-    document.getElementById('test-menu').classList.add('d-none');
-    document.getElementById('results-area').classList.remove('d-none');
-}
-
-// Volver al menú
-function backToMenu() {
-    document.getElementById('results-area').classList.add('d-none');
-    document.getElementById('test-menu').classList.remove('d-none');
-}
-
-// Descargar resultados
-function downloadResults() {
-    const doc = generateCertificate();
-    doc.save(`certificado_${userData.fullName.replace(/\s+/g, '_')}_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`);
-    
-    // También exportar a CSV para datos detallados
-    exportToCSV();
-}
-
 // Mostrar pregunta actual
 function showQuestion() {
     const question = currentTest.questions[currentQuestionIndex];
@@ -388,7 +322,9 @@ function showQuestion() {
             if (currentQuestionIndex < currentTest.questions.length - 1) {
                 document.getElementById('next-question').disabled = false;
             } else {
-                document.getElementById('finish-test').disabled = false; // Asegurarse de que se habilite
+                const finishButton = document.getElementById('finish-test');
+                finishButton.disabled = false;
+                console.log("Botón finalizar habilitado"); // Añadir log para depuración
             }
         });
         
@@ -414,7 +350,8 @@ function showQuestion() {
     } else {
         nextButton.classList.add('d-none');
         finishButton.classList.remove('d-none');
-        finishButton.disabled = true; // Aquí está el problema, siempre se deshabilita
+        // Inicialmente deshabilitado hasta que se seleccione una opción
+        finishButton.disabled = true;
     }
     
     // Si hay una respuesta guardada para esta pregunta, seleccionarla
@@ -427,7 +364,8 @@ function showQuestion() {
             if (currentQuestionIndex < currentTest.questions.length - 1) {
                 nextButton.disabled = false;
             } else {
-                finishButton.disabled = false; // Habilitar el botón finalizar si hay una respuesta guardada
+                finishButton.disabled = false;
+                console.log("Botón finalizar habilitado por respuesta guardada"); // Añadir log para depuración
             }
         }
     }
@@ -563,3 +501,63 @@ function validarDocumento(tipo, numero) {
     }
 }
 
+// Finalizar prueba
+function finishTest() {
+    console.log("Finalizando prueba..."); 
+    
+    // Detener el temporizador
+    if (testTimer) {
+        clearInterval(testTimer);
+        testTimer = null;
+    }
+    
+    // Guardar última respuesta
+    const selectedOption = document.querySelector('.option-item.selected');
+    if (selectedOption) {
+        userAnswers[currentQuestionIndex] = parseInt(selectedOption.getAttribute('data-index'));
+    }
+    
+    // Calcular resultados
+    let correctAnswers = 0;
+    userAnswers.forEach((answer, index) => {
+        if (answer === currentTest.questions[index].correctAnswer) {
+            correctAnswers++;
+        }
+    });
+    
+    const score = Math.round((correctAnswers / currentTest.questions.length) * 100);
+    
+    // Guardar resultados
+    const testId = Object.keys(tests).find(key => tests[key].title === currentTest.title);
+    if (!testId) {
+        console.error("No se pudo encontrar el ID del test actual");
+        alert("Error al guardar los resultados. Por favor, inténtelo de nuevo.");
+        return;
+    }
+    
+    userData.testResults[testId] = {
+        score: score,
+        correctAnswers: correctAnswers,
+        totalQuestions: currentTest.questions.length,
+        questionsFromPool: currentTest.originalQuestionCount,
+        date: new Date().toLocaleDateString()
+    };
+    
+    // Guardar en localStorage
+    saveAllUsersData();
+    
+    // Volver al menú
+    document.getElementById('test-area').classList.add('d-none');
+    document.getElementById('test-menu').classList.remove('d-none');
+    
+    // Actualizar estado de las tarjetas de prueba
+    updateTestCardStatus();
+    
+    // Mostrar botón de resultados si hay al menos una prueba completada
+    if (Object.keys(userData.testResults).length > 0) {
+        document.getElementById('view-results').classList.remove('d-none');
+    }
+
+    // Mostrar resultados
+    showResults();
+}
