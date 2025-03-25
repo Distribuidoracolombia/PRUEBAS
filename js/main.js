@@ -15,6 +15,9 @@ let timeRemaining = 0;
 
 // Elementos DOM
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar la aplicación
+    initApp();
+    
     // Inicializar EmailJS
     initEmailJS();
     
@@ -112,8 +115,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Verificar si el usuario ya existe en localStorage
 function checkExistingUser(cc) {
+    // Forzar lectura fresca de localStorage
     const allUsers = JSON.parse(localStorage.getItem('allUsers') || '{}');
     return allUsers[cc];
+}
+
+// Guardar resultados del usuario actual
+function saveResults() {
+    // Guardar en localStorage
+    localStorage.setItem(`user_${userData.cc}`, JSON.stringify(userData));
+    
+    // También actualizar en el almacén de todos los usuarios
+    saveAllUsersData();
+    
+    // Forzar sincronización
+    localStorage.setItem('lastSave', new Date().toISOString());
+    
+    console.log('Datos guardados correctamente:', userData);
 }
 
 // Actualizar el estado de las tarjetas de prueba
@@ -142,6 +160,9 @@ function saveAllUsersData() {
     const allUsers = JSON.parse(localStorage.getItem('allUsers') || '{}');
     allUsers[userData.cc] = userData;
     localStorage.setItem('allUsers', JSON.stringify(allUsers));
+    
+    // Forzar sincronización con localStorage
+    localStorage.setItem('lastUpdate', new Date().toISOString());
 }
 
 // Iniciar prueba
