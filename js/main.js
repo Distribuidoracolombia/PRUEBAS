@@ -1,21 +1,20 @@
+// Variables globales
+let userData = {
+    fullName: '',
+    position: '',
+    cc: '',
+    documentType: 'cc',
+    testResults: {}
+};
+
 let currentTest = null;
 let currentQuestionIndex = 0;
 let userAnswers = [];
-let testTitle = null;
+let testTimer = null;
 let timeRemaining = 0;
 
 // Elementos DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Define la función initApp
-    function initApp() {
-        // Tu código de inicialización aquí
-        console.log("Aplicación inicializada");
-        // Agrega tu lógica de inicialización
-    }
-    
-    // Llama a la función
-    initApp();
-    
     // Inicializar EmailJS
     initEmailJS();
     
@@ -113,23 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Verificar si el usuario ya existe en localStorage
 function checkExistingUser(cc) {
-    // Forzar lectura fresca de localStorage
     const allUsers = JSON.parse(localStorage.getItem('allUsers') || '{}');
     return allUsers[cc];
-}
-
-// Guardar resultados del usuario actual
-function saveResults() {
-    // Guardar en localStorage
-    localStorage.setItem(`user_${userData.cc}`, JSON.stringify(userData));
-    
-    // También actualizar en el almacén de todos los usuarios
-    saveAllUsersData();
-    
-    // Forzar sincronización
-    localStorage.setItem('lastSave', new Date().toISOString());
-    
-    console.log('Datos guardados correctamente:', userData);
 }
 
 // Actualizar el estado de las tarjetas de prueba
@@ -158,9 +142,6 @@ function saveAllUsersData() {
     const allUsers = JSON.parse(localStorage.getItem('allUsers') || '{}');
     allUsers[userData.cc] = userData;
     localStorage.setItem('allUsers', JSON.stringify(allUsers));
-    
-    // Forzar sincronización con localStorage
-    localStorage.setItem('lastUpdate', new Date().toISOString());
 }
 
 // Iniciar prueba
@@ -417,7 +398,6 @@ function nextQuestion() {
 function setupDocumentValidation() {
     const documentTypeSelect = document.getElementById('document-type');
     const documentInput = document.getElementById('cc');
-    const documentHelp = document.getElementById('document-help');
     
     if (documentTypeSelect && documentInput) {
         // Cambiar placeholder según tipo de documento
@@ -433,9 +413,6 @@ function setupDocumentValidation() {
                     documentInput.placeholder = 'Ej: AB123456';
                     break;
             }
-            
-            // Limpiar mensajes de error previos
-            clearValidationMessages();
         });
         
         // Validar en tiempo real mientras el usuario escribe
@@ -443,12 +420,8 @@ function setupDocumentValidation() {
             const documentType = documentTypeSelect.value;
             const documentValue = this.value.trim();
             
-            // Limpiar mensajes de error previos
-            clearValidationMessages();
-            
             if (documentValue && !validarDocumento(documentType, documentValue)) {
                 this.classList.add('is-invalid');
-                this.classList.remove('is-valid');
                 
                 // Mostrar mensaje de error específico
                 let errorMessage = '';
@@ -464,31 +437,23 @@ function setupDocumentValidation() {
                         break;
                 }
                 
-                // Crear mensaje de error
-                const feedbackElement = document.createElement('div');
-                feedbackElement.className = 'invalid-feedback';
+                // Crear o actualizar mensaje de error
+                let feedbackElement = this.nextElementSibling;
+                if (!feedbackElement || !feedbackElement.classList.contains('invalid-feedback')) {
+                    feedbackElement = document.createElement('div');
+                    feedbackElement.className = 'invalid-feedback';
+                    this.parentNode.appendChild(feedbackElement);
+                }
                 feedbackElement.textContent = errorMessage;
-                feedbackElement.id = 'document-error';
-                this.parentNode.appendChild(feedbackElement);
-            } else if (documentValue) {
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
             } else {
                 this.classList.remove('is-invalid');
-                this.classList.remove('is-valid');
+                this.classList.add('is-valid');
             }
         });
         
         // Establecer placeholder inicial
         documentTypeSelect.dispatchEvent(new Event('change'));
     }
-}
-
-// Función para limpiar mensajes de validación
-function clearValidationMessages() {
-    // Eliminar todos los mensajes de error existentes
-    const existingErrors = document.querySelectorAll('.invalid-feedback');
-    existingErrors.forEach(element => element.remove());
 }
 
 // Función para validar el documento según su tipo
