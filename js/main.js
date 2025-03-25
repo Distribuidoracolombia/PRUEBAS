@@ -22,7 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Configurar validación de documento según tipo
     setupDocumentValidation();
-    
+
+
+    console.log(typeof initApp);
+
     // Formulario de registro
     const userForm = document.getElementById('user-form');
     userForm.addEventListener('submit', function(e) {
