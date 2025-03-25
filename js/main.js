@@ -398,6 +398,7 @@ function nextQuestion() {
 function setupDocumentValidation() {
     const documentTypeSelect = document.getElementById('document-type');
     const documentInput = document.getElementById('cc');
+    const documentHelp = document.getElementById('document-help');
     
     if (documentTypeSelect && documentInput) {
         // Cambiar placeholder según tipo de documento
@@ -413,6 +414,9 @@ function setupDocumentValidation() {
                     documentInput.placeholder = 'Ej: AB123456';
                     break;
             }
+            
+            // Limpiar mensajes de error previos
+            clearValidationMessages();
         });
         
         // Validar en tiempo real mientras el usuario escribe
@@ -420,8 +424,12 @@ function setupDocumentValidation() {
             const documentType = documentTypeSelect.value;
             const documentValue = this.value.trim();
             
+            // Limpiar mensajes de error previos
+            clearValidationMessages();
+            
             if (documentValue && !validarDocumento(documentType, documentValue)) {
                 this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
                 
                 // Mostrar mensaje de error específico
                 let errorMessage = '';
@@ -437,23 +445,31 @@ function setupDocumentValidation() {
                         break;
                 }
                 
-                // Crear o actualizar mensaje de error
-                let feedbackElement = this.nextElementSibling;
-                if (!feedbackElement || !feedbackElement.classList.contains('invalid-feedback')) {
-                    feedbackElement = document.createElement('div');
-                    feedbackElement.className = 'invalid-feedback';
-                    this.parentNode.appendChild(feedbackElement);
-                }
+                // Crear mensaje de error
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = 'invalid-feedback';
                 feedbackElement.textContent = errorMessage;
-            } else {
+                feedbackElement.id = 'document-error';
+                this.parentNode.appendChild(feedbackElement);
+            } else if (documentValue) {
                 this.classList.remove('is-invalid');
                 this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.remove('is-valid');
             }
         });
         
         // Establecer placeholder inicial
         documentTypeSelect.dispatchEvent(new Event('change'));
     }
+}
+
+// Función para limpiar mensajes de validación
+function clearValidationMessages() {
+    // Eliminar todos los mensajes de error existentes
+    const existingErrors = document.querySelectorAll('.invalid-feedback');
+    existingErrors.forEach(element => element.remove());
 }
 
 // Función para validar el documento según su tipo
