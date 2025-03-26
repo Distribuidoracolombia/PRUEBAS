@@ -5,18 +5,160 @@ body {
 
 .card {
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     border: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
 .test-card {
-    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    height: 100%;
+    transition: all 0.3s ease;
+    border: none;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
 }
 
 .test-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.15);
+}
+
+.test-card.completed {
+    background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    position: relative;
+}
+
+.test-card.completed::after {
+    content: "Completado";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.option-item {
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #dee2e6;
+    background-color: white;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.option-item.selected {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0069d9, #004494);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #218838, #1c7430);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    transition: width 0.5s ease;
+}
+
+.timer-container {
+    font-size: 1.2rem;
+}
+
+.badge {
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+/* Modern form styling */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+}
+
+/* Animation for test cards */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.test-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.col-md-6:nth-child(1) .test-card { animation-delay: 0.1s; }
+.col-md-6:nth-child(2) .test-card { animation-delay: 0.2s; }
+.col-md-6:nth-child(3) .test-card { animation-delay: 0.3s; }
+.col-md-6:nth-child(4) .test-card { animation-delay: 0.4s; }
+.col-md-6:nth-child(5) .test-card { animation-delay: 0.5s; }
+
+/* View Results button styling */
+#view-results {
+    background: linear-gradient(45deg, #6610f2, #6f42c1);
+    color: white;
+    padding: 10px 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 16, 242, 0.3);
+    transition: all 0.3s;
+}
+
+#view-results:hover {
+    background: linear-gradient(45deg, #5a0fc2, #633ab0);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(102, 16, 242, 0.4);
 }
 
 .test-card i {

@@ -137,15 +137,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("No se encontró el botón finalizar");
     }
     
-    // Make sure the view-results button has a proper event listener
-    const viewResultsButton = document.getElementById('view-results');
-    if (viewResultsButton) {
-        viewResultsButton.addEventListener('click', function() {
+    // Añadir evento al botón de ver resultados
+    const viewResultsBtn = document.getElementById('view-results');
+    if (viewResultsBtn) {
+        viewResultsBtn.addEventListener('click', function() {
             showResults();
         });
-        console.log("Event listener added to view-results button");
-    } else {
-        console.error("view-results button not found");
     }
     
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
@@ -160,25 +157,27 @@ function checkExistingUser(cc) {
 }
 
 // Actualizar el estado de las tarjetas de prueba
+// Add this function to your main.js file
 function updateTestCardStatus() {
+    // Get all test cards
     const testCards = document.querySelectorAll('.test-card');
+    
+    // Check each card if it's completed
     testCards.forEach(card => {
         const testId = card.getAttribute('data-test');
         
-        // Si el usuario ya realizó esta prueba, deshabilitar la tarjeta
-        if (userData.testResults[testId]) {
-            card.classList.add('disabled');
-            card.style.opacity = '0.6';
-            card.style.cursor = 'not-allowed';
+        // If user has results for this test
+        if (userData.testResults && userData.testResults[testId]) {
+            card.classList.add('completed');
             
-            // Añadir indicador de completado
-            const completedBadge = document.createElement('div');
-            completedBadge.className = 'position-absolute top-0 end-0 p-2';
-            completedBadge.innerHTML = '<span class="badge bg-success">Completado</span>';
-            card.appendChild(completedBadge);
+            // Show the view results button
+            document.getElementById('view-results').classList.remove('d-none');
         }
     });
 }
+
+// Call this function after loading user data
+// For example, in your existing code where you show the test menu
 
 // Guardar datos de todos los usuarios
 function saveAllUsersData() {
@@ -300,7 +299,7 @@ function showQuestion() {
         // Verificar si la carpeta img existe
         const img = new Image();
         img.onload = function() {
-            imageContainer.innerHTML = `<img src="${question.image}" alt="Imagen de referencia" class="img-fluid" style="max-height: 200px;">`;
+            imageContainer.innerHTML = `<img src="./${question.image}" alt="Imagen de referencia" class="img-fluid" style="max-height: 200px;">`;
         };
         img.onerror = function() {
             console.error(`Error al cargar la imagen: ${question.image}`);
