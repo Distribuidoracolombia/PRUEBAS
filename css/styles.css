@@ -97,3 +97,32 @@ body {
         display: none;
     }
 }
+
+/* Estilos para el acordeón de resultados */
+.accordion-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #0c63e4;
+}
+
+.accordion-button i {
+    margin-right: 10px;
+}
+
+.accordion-body {
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+/* Estilos para respuestas correctas e incorrectas */
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}

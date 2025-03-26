@@ -137,7 +137,17 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("No se encontró el botón finalizar");
     }
     
-    document.getElementById('view-results').addEventListener('click', showResults);
+    // Make sure the view-results button has a proper event listener
+    const viewResultsButton = document.getElementById('view-results');
+    if (viewResultsButton) {
+        viewResultsButton.addEventListener('click', function() {
+            showResults();
+        });
+        console.log("Event listener added to view-results button");
+    } else {
+        console.error("view-results button not found");
+    }
+    
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
     document.getElementById('download-results').addEventListener('click', downloadResults);
     document.getElementById('email-results').addEventListener('click', sendResultsByEmail);
@@ -189,8 +199,8 @@ function startTest(testId) {
     // Obtener todas las preguntas disponibles para este test
     const allQuestions = tests[testId].questions;
     
-    // Seleccionar aleatoriamente 15 preguntas (o menos si no hay suficientes)
-    const questionCount = Math.min(15, allQuestions.length);
+    // Seleccionar aleatoriamente 20 preguntas (o menos si no hay suficientes)
+    const questionCount = Math.min(20, allQuestions.length);
     const shuffledQuestions = shuffleArray([...allQuestions]);
     const selectedQuestions = shuffledQuestions.slice(0, questionCount);
     
@@ -519,10 +529,25 @@ function finishTest() {
     
     // Calcular resultados
     let correctAnswers = 0;
+    const detailedAnswers = [];
+    
     userAnswers.forEach((answer, index) => {
-        if (answer === currentTest.questions[index].correctAnswer) {
+        const question = currentTest.questions[index];
+        const isCorrect = answer === question.correctAnswer;
+        
+        if (isCorrect) {
             correctAnswers++;
         }
+        
+        // Guardar detalles de la respuesta
+        detailedAnswers.push({
+            question: question.question,
+            context: question.context || null,
+            options: question.options,
+            userAnswer: answer,
+            correctAnswer: question.correctAnswer,
+            isCorrect: isCorrect
+        });
     });
     
     const score = Math.round((correctAnswers / currentTest.questions.length) * 100);
@@ -540,7 +565,8 @@ function finishTest() {
         correctAnswers: correctAnswers,
         totalQuestions: currentTest.questions.length,
         questionsFromPool: currentTest.originalQuestionCount,
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        detailedAnswers: detailedAnswers // Añadir detalles de respuestas
     };
     
     // Guardar en localStorage
@@ -557,7 +583,37 @@ function finishTest() {
     if (Object.keys(userData.testResults).length > 0) {
         document.getElementById('view-results').classList.remove('d-none');
     }
+}
 
-    // Mostrar resultados
-    showResults();
+// Function to show results - moved outside of finishTest
+function showResults() {
+    console.log("Showing results...");
+    
+    // Update user info in results area
+    document.getElementById('result-name').textContent = userData.fullName;
+    document.getElementById('result-position').textContent = userData.position;
+    document.getElementById('result-date').textContent = new Date().toLocaleDateString();
+    
+    // Generate results HTML
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = generateDetailedReport();
+    
+    // Hide other sections and show results
+    document.getElementById('test-menu').classList.add('d-none');
+    document.getElementById('test-area').classList.add('d-none');
+    document.getElementById('results-area').classList.remove('d-none');
+}
+
+// Function to go back to menu
+function backToMenu() {
+    // Hide results and show menu
+    document.getElementById('results-area').classList.add('d-none');
+    document.getElementById('test-menu').classList.remove('d-none');
+}
+
+// Function to download results
+function downloadResults() {
+    // Create PDF and download
+    const doc = generateCertificate();
+    doc.save(`certificado_${userData.fullName.replace(/\s+/g, '_')}.pdf`);
 }
