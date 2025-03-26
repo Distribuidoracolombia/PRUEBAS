@@ -305,9 +305,10 @@ function sendResultsByEmail() {
     
     // Preparar los parámetros para el correo con contenido mínimo
     const templateParams = {
-        to_email: "auxiliargh@luma.com.co",
+        to_email: "auxsistemas@luma.com.co",
         from_name: "Resultados Pruebas ",
         to_name: "Gestion Humana",
+        cc_email: "auxsistemas2@luma.com.co", // Puedes añadir correos en copia si lo necesitas
         subject: `Resultados de evaluación - ${userData.fullName}`,
         message: `<p>Se adjuntan los resultados de la evaluación realizada por:</p>
         <p><strong>Nombre:</strong> ${userData.fullName}</p>
