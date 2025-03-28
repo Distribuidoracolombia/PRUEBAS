@@ -146,20 +146,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
-    // Add this to your document ready or initialization code section
-    document.addEventListener('DOMContentLoaded', function() {
-        // ... existing initialization code ...
-        
-        // Add event listener for the email button
-        const emailButton = document.getElementById('email-results');
-        if (emailButton) {
-            emailButton.addEventListener('click', function() {
-                sendResultsByEmail();
-            });
-        }
-        
-        // ... other event listeners ...
-    });
+    
+    // Add email button event listener
+    const emailButton = document.getElementById('email-results');
+    if (emailButton) {
+        emailButton.addEventListener('click', function() {
+            // Show loading indicator or disable button to prevent multiple clicks
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            this.disabled = true;
+            
+            // Call the email sending function
+            sendResultsByEmail()
+                .then(() => {
+                    // Reset button after sending
+                    this.innerHTML = 'Enviar por Correo';
+                    this.disabled = false;
+                })
+                .catch(() => {
+                    // Reset button if there's an error
+                    this.innerHTML = 'Enviar por Correo';
+                    this.disabled = false;
+                });
+        });
+    }
+    
+    // Remove the nested DOMContentLoaded event listener that starts around line 152
+    // DELETE FROM HERE
+    // document.addEventListener('DOMContentLoaded', function() {
+    //    ... duplicate code ...
+    // });
+    // TO HERE
 });
 
 // Verificar si el usuario ya existe en localStorage
