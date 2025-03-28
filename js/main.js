@@ -146,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
-    document.getElementById('download-results').addEventListener('click', downloadResults);
     // Add this to your document ready or initialization code section
     document.addEventListener('DOMContentLoaded', function() {
         // ... existing initialization code ...
