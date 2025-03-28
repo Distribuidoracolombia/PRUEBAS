@@ -320,13 +320,14 @@ function sendResultsByEmail() {
         test_date: new Date().toLocaleDateString()
     };
     
-    // Enviar el correo
-    emailjs.send('service_gu2z3bu', 'template_nh327cj', emailParams)
+    // Enviar el correo y retornar la promesa
+    return emailjs.send('service_gu2z3bu', 'template_nh327cj', emailParams)
         .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
             alert('Resultados enviados por correo exitosamente');
         }, function(error) {
             console.log('FAILED...', error);
             alert('Error al enviar resultados por correo: ' + error);
+            throw error; // Re-throw to be caught by the caller
         });
-    }
+}
