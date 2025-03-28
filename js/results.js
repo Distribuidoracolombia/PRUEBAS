@@ -1,333 +1,157 @@
-// Funciones para manejar los resultados de las pruebas
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pruebas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Añadir EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Formulario de registro -->
+        <div id="registration-form" class="card my-5">
+            <div class="card-body">
+                <h1 class="text-center mb-4">Sistema de Evaluación</h1>
+                <form id="user-form">
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="fullname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="document-type" class="form-label">Tipo de documento</label>
+                        <select class="form-select" id="document-type">
+                            <option value="cc">Cédula de Ciudadanía</option>
+                            <option value="ce">Cédula de Extranjería</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cc" class="form-label">Número de documento</label>
+                        <input type="text" class="form-control" id="cc" required>
+                        <div class="form-text" id="document-help">
+                            CC: 8-10 dígitos | CE: 6-12 caracteres | Pasaporte: 2 letras + 6-7 dígitos
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="position" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Continuar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-// Guardar resultados en localStorage
-function saveResults() {
-    localStorage.setItem('testResults_' + userData.cc, JSON.stringify(userData));
-}
-
-// Cargar resultados desde localStorage
-function loadResults() {
-    const savedData = localStorage.getItem('testResults_' + userData.cc);
-    if (savedData) {
-        return JSON.parse(savedData);
-    }
-    return null;
-}
-
-// Generar informe detallado
-function generateDetailedReport() {
-    let report = `
-    <h3>Informe Detallado</h3>
-    <p><strong>Nombre:</strong> ${userData.fullName}</p>
-    <p><strong>Cédula:</strong> ${userData.cc}</p>
-    <p><strong>Cargo:</strong> ${userData.position}</p>
-    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
-    <hr>
-    `;
-    
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        report += `
-        <h4>${testName}</h4>
-        <p><strong>Puntuación:</strong> ${result.score}%</p>
-        <p><strong>Respuestas correctas:</strong> ${result.correctAnswers} de ${result.totalQuestions}</p>
-        <p><strong>Fecha de realización:</strong> ${result.date}</p>
-        `;
-        
-        // Añadir evaluación basada en la puntuación
-        if (result.score >= 90) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-success">Excelente</span></p>`;
-        } else if (result.score >= 70) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-primary">Bueno</span></p>`;
-        } else if (result.score >= 50) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-warning">Regular</span></p>`;
-        } else {
-            report += `<p><strong>Evaluación:</strong> <span class="text-danger">Necesita mejorar</span></p>`;
-        }
-        
-        // Añadir detalles de las preguntas si están disponibles
-        if (result.detailedAnswers && result.detailedAnswers.length > 0) {
-            report += `
-            <div class="mt-4">
-                <h5>Detalle de respuestas:</h5>
-                <div class="accordion" id="accordionAnswers${testId}">
-            `;
-            
-            result.detailedAnswers.forEach((answer, idx) => {
-                const accordionId = `answer-${testId}-${idx}`;
-                const statusClass = answer.isCorrect ? 'text-success' : 'text-danger';
-                const statusIcon = answer.isCorrect ? 
-                    '<i class="fas fa-check-circle text-success"></i>' : 
-                    '<i class="fas fa-times-circle text-danger"></i>';
-                
-                report += `
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading${accordionId}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                data-bs-target="#collapse${accordionId}" aria-expanded="false" 
-                                aria-controls="collapse${accordionId}">
-                            ${statusIcon} Pregunta ${idx + 1}: ${answer.question.substring(0, 50)}${answer.question.length > 50 ? '...' : ''}
-                        </button>
-                    </h2>
-                    <div id="collapse${accordionId}" class="accordion-collapse collapse" 
-                         aria-labelledby="heading${accordionId}" data-bs-parent="#accordionAnswers${testId}">
-                        <div class="accordion-body">
-                            <p><strong>Pregunta:</strong> ${answer.question} ${answer.context ? `(${answer.context})` : ''}</p>
-                            <p><strong>Tu respuesta:</strong> <span class="${statusClass}">${answer.options[answer.userAnswer]}</span></p>
-                            <p><strong>Respuesta correcta:</strong> ${answer.options[answer.correctAnswer]}</p>
+        <!-- Menú de pruebas -->
+        <div id="test-menu" class="card my-5 d-none">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Seleccione una prueba</h2>
+                <div class="user-info mb-4">
+                    <p><strong>Nombre:</strong> <span id="user-name"></span></p>
+                    <p><strong>Cargo:</strong> <span id="user-position"></span></p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card test-card" data-test="ortografia-basico">
+                            <div class="card-body text-center">
+                                <i class="fas fa-spell-check fa-3x mb-3"></i>
+                                <h3>Ortografía Básico</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card test-card" data-test="ortografia-medio">
+                            <div class="card-body text-center">
+                                <i class="fas fa-language fa-3x mb-3"></i>
+                                <h3>Ortografía Medio</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card test-card" data-test="excel-basico">
+                            <div class="card-body text-center">
+                                <i class="fas fa-table fa-3x mb-3"></i>
+                                <h3>Excel Básico</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card test-card" data-test="excel-intermedio">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                                <h3>Excel Intermedio</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card test-card" data-test="cajera-pdv">
+                            <div class="card-body text-center">
+                                <i class="fas fa-cash-register fa-3x mb-3"></i>
+                                <h3>Cajera Punto de Venta</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
-                `;
-            });
-            
-            report += `
+                <div class="text-center mt-3">
+                    <button id="view-results" class="btn btn-success d-none">Ver Resultados</button>
                 </div>
             </div>
-            `;
-        }
-        
-        report += `<hr>`;
-    });
-    
-    // Añadir evaluación general
-    let totalScore = 0;
-    let testsCount = Object.keys(userData.testResults).length;
-    
-    Object.values(userData.testResults).forEach(result => {
-        totalScore += result.score;
-    });
-    
-    const averageScore = totalScore / testsCount;
-    
-    report += `
-    <h4>Evaluación General</h4>
-    <p><strong>Puntuación promedio:</strong> ${Math.round(averageScore)}%</p>
-    `;
-    
-    if (averageScore >= 90) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-success">Excelente</span></p>`;
-    } else if (averageScore >= 70) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-primary">Bueno</span></p>`;
-    } else if (averageScore >= 50) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-warning">Regular</span></p>`;
-    } else {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-danger">Necesita mejorar</span></p>`;
-    }
-    
-    return report;
-}
+        </div>
 
-// Generar certificado
-function generateCertificate() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Título
-    doc.setFontSize(22);
-    doc.setTextColor(0, 102, 204);
-    doc.text('Certificado de Evaluación', 105, 30, { align: 'center' });
-    
-    // Línea decorativa
-    doc.setDrawColor(0, 102, 204);
-    doc.setLineWidth(1);
-    doc.line(20, 40, 190, 40);
-    
-    // Contenido
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(16);
-    doc.text('Se certifica que:', 105, 60, { align: 'center' });
-    
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text(userData.fullName, 105, 75, { align: 'center' });
-    
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Cargo: ${userData.position}`, 105, 90, { align: 'center' });
-    
-    doc.setFontSize(16);
-    doc.text('Ha completado satisfactoriamente las siguientes evaluaciones:', 105, 110, { align: 'center' });
-    
-    // Resultados
-    let yPosition = 130;
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        doc.setFontSize(14);
-        doc.text(`${testName}: ${result.score}%`, 105, yPosition, { align: 'center' });
-        
-        yPosition += 15;
-    });
-    
-    // Fecha
-    doc.setFontSize(12);
-    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 105, 230, { align: 'center' });
-    
-    // Firma
-    doc.setDrawColor(0, 0, 0);
-    doc.line(70, 210, 140, 210);
-    doc.setFontSize(12);
-    doc.text('Firma del evaluador', 105, 220, { align: 'center' });
-    
-    return doc;
-}
+        <!-- Área de prueba -->
+        <div id="test-area" class="card my-5 d-none">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 id="test-title" class="mb-0"></h2>
+                    <div class="timer-container">
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-clock me-1"></i>
+                            <span id="timer-display">10:00</span>
+                        </span>
+                    </div>
+                </div>
+                <div id="test-progress" class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div id="question-container">
+                    <h4 id="question-text"></h4>
+                    <div id="options-container" class="mt-3"></div>
+                </div>
+                <div class="text-center mt-4">
+                    <button id="next-question" class="btn btn-primary">Siguiente</button>
+                    <button id="finish-test" class="btn btn-success d-none">Finalizar</button>
+                </div>
+            </div>
+        </div>
 
-// Exportar resultados a Excel (simulado con CSV)
-function exportToCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    
-    // Encabezados
-    csvContent += "Nombre,Cargo,Prueba,Puntuación,Respuestas Correctas,Total Preguntas,Fecha\n";
-    
-    // Datos
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        csvContent += `${userData.fullName},${userData.position},${testName},${result.score}%,${result.correctAnswers},${result.totalQuestions},${result.date}\n`;
-    });
-    
-    // Crear enlace de descarga
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `resultados_${userData.fullName.replace(/\s+/g, '_')}_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
-    document.body.appendChild(link);
-    
-    // Descargar archivo
-    link.click();
-    
-    // Eliminar enlace
-    document.body.removeChild(link);
-}
+        <!-- Resultados -->
+        <div id="results-area" class="card my-5 d-none">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Resultados</h2>
+                <div class="user-info mb-4">
+                    <p><strong>Nombre:</strong> <span id="result-name"></span></p>
+                    <p><strong>Cargo:</strong> <span id="result-position"></span></p>
+                    <p><strong>Fecha:</strong> <span id="result-date"></span></p>
+                </div>
+                <div id="results-container"></div>
+                <div class="text-center mt-4">
+                    <button id="email-results" class="btn btn-success">Enviar por Correo</button>
+                    <button id="back-to-menu" class="btn btn-secondary">Volver al Menú</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// Inicializar EmailJS
-function initEmailJS() {
-    // Solo se necesita el public key para la inicialización
-    emailjs.init("ujydeP8ESBAm8HttQ");
-}
-
-// Función para generar un informe muy simplificado para correo
-function generateVerySimpleEmailReport() {
-    let report = `<h3>Informe de Resultados</h3>
-    <p><strong>Nombre:</strong> ${userData.fullName}</p>
-    <p><strong>Cédula:</strong> ${userData.cc}</p>
-    <p><strong>Cargo:</strong> ${userData.position}</p>
-    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
-    <hr>`;
-    
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        report += `<h4>${testName}</h4>
-        <p><strong>Puntuación:</strong> ${result.score}%</p>
-        <p><strong>Respuestas correctas:</strong> ${result.correctAnswers} de ${result.totalQuestions}</p>
-        <p><strong>Fecha de realización:</strong> ${result.date}</p>`;
-        
-        // Evaluación sin formato HTML complejo
-        if (result.score >= 90) {
-            report += `<p><strong>Evaluación:</strong> Excelente</p>`;
-        } else if (result.score >= 70) {
-            report += `<p><strong>Evaluación:</strong> Bueno</p>`;
-        } else if (result.score >= 50) {
-            report += `<p><strong>Evaluación:</strong> Regular</p>`;
-        } else {
-            report += `<p><strong>Evaluación:</strong> Necesita mejorar</p>`;
-        }
-        
-        // Añadir detalles de las preguntas si están disponibles
-        if (result.detailedAnswers && result.detailedAnswers.length > 0) {
-            report += `<h5>Detalle de respuestas:</h5>
-            <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
-                <tr style="background-color: #f2f2f2;">
-                    <th style="text-align: left;">Pregunta</th>
-                    <th style="text-align: left;">Respuesta del usuario</th>
-                    <th style="text-align: left;">Respuesta correcta</th>
-                    <th style="text-align: center;">Estado</th>
-                </tr>`;
-            
-            result.detailedAnswers.forEach((answer, idx) => {
-                const isCorrect = answer.isCorrect;
-                const statusIcon = isCorrect ? '✓' : '✗';
-                const statusColor = isCorrect ? 'green' : 'red';
-                
-                report += `<tr>
-                    <td>${answer.question} ${answer.context ? `(${answer.context})` : ''}</td>
-                    <td>${answer.options[answer.userAnswer]}</td>
-                    <td>${answer.options[answer.correctAnswer]}</td>
-                    <td style="text-align: center; color: ${statusColor};">${statusIcon}</td>
-                </tr>`;
-            });
-            
-            report += `</table>`;
-        } else {
-            report += `<p><em>No hay información detallada disponible para esta prueba.</em></p>`;
-        }
-        
-        report += `<hr>`;
-    });
-    
-    // Evaluación general simplificada
-    let totalScore = 0;
-    let testsCount = Object.keys(userData.testResults).length;
-    
-    Object.values(userData.testResults).forEach(result => {
-        totalScore += result.score;
-    });
-    
-    const averageScore = totalScore / testsCount;
-    
-    report += `<h4>Evaluación General</h4>
-    <p><strong>Puntuación promedio:</strong> ${Math.round(averageScore)}%</p>`;
-    
-    if (averageScore >= 90) {
-        report += `<p><strong>Evaluación general:</strong> Excelente</p>`;
-    } else if (averageScore >= 70) {
-        report += `<p><strong>Evaluación general:</strong> Bueno</p>`;
-    } else if (averageScore >= 50) {
-        report += `<p><strong>Evaluación general:</strong> Regular</p>`;
-    } else {
-        report += `<p><strong>Evaluación general:</strong> Necesita mejorar</p>`;
-    }
-    
-    return report;
-}
-
-// Configuración de múltiples destinatarios en EmailJS
-
-// Para activar la opción de múltiples destinatarios en EmailJS, necesitas modificar tu plantilla en el panel de control de EmailJS. Voy a actualizar tu función para asegurar que funcione correctamente con múltiples destinatarios:
-function sendResultsByEmail() {
-    // Generar el informe simplificado para el correo
-    const emailReport = generateVerySimpleEmailReport();
-    
-    // Preparar parámetros del correo con múltiples destinatarios
-    const emailParams = {
-        to_email: "gestionhumana@luma.com.co",
-        to_name: "Recursos Humanos",
-        from_name: "Sistema de Evaluación",
-        subject: `Resultados de Evaluación - ${userData.fullName}`,
-        message: emailReport,
-        reply_to: "noreply@luma.com.co",
-        cc_email: "auxiliargh@luma.com", // Puedes añadir correos en copia si lo necesitas
-        user_name: userData.fullName,
-        user_position: userData.position,
-        user_document: `${userData.documentType.toUpperCase()}: ${userData.cc}`,
-        test_date: new Date().toLocaleDateString()
-    };
-    
-    // Enviar el correo y retornar la promesa
-    return emailjs.send('service_gu2z3bu', 'template_nh327cj', emailParams)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            alert('Resultados enviados por correo exitosamente');
-        }, function(error) {
-            console.log('FAILED...', error);
-            alert('Error al enviar resultados por correo: ' + error);
-            throw error; // Re-throw to be caught by the caller
-        });
-}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="./js/tests.js"></script>
+    <script src="./js/results.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
