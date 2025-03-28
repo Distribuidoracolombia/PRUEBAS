@@ -147,7 +147,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
     document.getElementById('download-results').addEventListener('click', downloadResults);
-    document.getElementById('email-results').addEventListener('click', sendResultsByEmail);
+    // Add this to your document ready or initialization code section
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... existing initialization code ...
+        
+        // Add event listener for the email button
+        const emailButton = document.getElementById('email-results');
+        if (emailButton) {
+            emailButton.addEventListener('click', function() {
+                sendResultsByEmail();
+            });
+        }
+        
+        // ... other event listeners ...
+    });
 });
 
 // Verificar si el usuario ya existe en localStorage
