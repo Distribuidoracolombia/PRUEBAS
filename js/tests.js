@@ -362,114 +362,177 @@ const tests = {
         }
     ]
 }, 
-    "excel-basico": {
-        "title": "Prueba de Excel Básico",
-        "timeLimit": 600,
-        "questions": [
+    "excel-intermedio": {
+
+                title: "Prueba de Excel Intermedio",
+                timeLimit: 600, // 10 minutos
+                questions: [
+                    {
+                        question: "¿Qué función se utiliza para combinar rangos y aplicar criterios múltiples?",
+                        options: ["Y()", "O()", "SI.CONJUNTO()", "SI.MULTIPLE()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué hace la función SUMAR.SI()?",
+                        options: [
+                            "Suma todos los valores de un rango",
+                            "Suma valores que cumplen con un criterio específico",
+                            "Suma si el resultado es positivo",
+                            "Suma valores duplicados"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué es una referencia mixta en Excel?",
+                        options: [
+                            "Una referencia que incluye texto y números",
+                            "Una referencia que combina celdas absolutas y relativas",
+                            "Una referencia a múltiples hojas",
+                            "Una referencia a una tabla dinámica"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para buscar un valor en una matriz y devolver un valor de la misma fila pero en una columna diferente?",
+                        options: ["BUSCARV()", "BUSCARH()", "INDICE()", "COINCIDIR()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué hace la función CONCATENAR()?",
+                        options: [
+                            "Suma valores",
+                            "Une texto de diferentes celdas",
+                            "Cuenta celdas",
+                            "Calcula promedios"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para buscar un valor en la primera columna de una tabla y devolver un valor de la misma fila en una columna especificada?",
+                        options: ["BUSCARV()", "BUSCARH()", "INDICE(COINCIDIR())", "CONSULTAV()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué función se utiliza para extraer texto de una celda desde una posición específica y con una longitud determinada?",
+                        options: ["EXTRAER()", "EXTRAE()", "SUBCADENA()", "IZQUIERDA()"],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función anidada se puede usar para buscar un valor en una tabla y devolver la posición de la fila?",
+                        options: ["INDICE()", "COINCIDIR()", "BUSCARV()", "FILA()"],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para combinar texto de diferentes celdas?",
+                        options: ["CONCATENAR()", "UNIR()", "COMBINAR()", "JUNTAR()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué función se utiliza para calcular el pago de un préstamo basado en pagos constantes y una tasa de interés constante?",
+                        options: ["PAGO()", "PAGOINT()", "PAGOPRIN()", "NPER()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué tipo de referencia no cambia cuando se copia una fórmula a otra celda?",
+                        options: ["Referencia relativa", "Referencia absoluta", "Referencia mixta", "Referencia dinámica"],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para contar celdas que contienen números en un rango que cumple con múltiples criterios?",
+                        options: ["CONTAR.SI()", "CONTAR.SI.CONJUNTO()", "SUMAR.SI()", "PROMEDIO.SI()"],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para devolver uno de dos valores dependiendo de una condición?",
+                        options: ["SI()", "Y()", "O()", "ELEGIR()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué función se utiliza para calcular la suma de productos de rangos correspondientes?",
+                        options: ["SUMAR()", "PRODUCTO()", "SUMAPRODUCTO()", "SUMX2MY2()"],
+                        correctAnswer: 2
+                    },
+                    {
+                        question: "¿Qué función se utiliza para encontrar el valor más pequeño en un rango?",
+                        options: ["MIN()", "MENOR()", "PEQUEÑO()", "MINIMO()"],
+                        correctAnswer: 0
+                    },
+                    // Nuevas preguntas para completar las 20
+                    {
+                        question: "¿Qué función se utiliza para calcular el valor futuro de una inversión con pagos periódicos constantes?",
+                        options: ["VF()", "VA()", "TIR()", "VNA()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué función se utiliza para convertir texto a mayúsculas?",
+                        options: ["MAYUSC()", "SUPERIOR()", "CAPITAL()", "UPPER()"],
+                        correctAnswer: 0
+                    },
+                    {
+                        question: "¿Qué función se utiliza para redondear un número al múltiplo más cercano de un número específico?",
+                        options: ["REDONDEAR()", "MULTIPLO.SUPERIOR()", "REDONDEAR.MULTIPLO()", "MULTIPLO()"],
+                        correctAnswer: 2
+                    },
+                    {
+                        question: "¿Qué función se utiliza para obtener el día de la semana a partir de una fecha?",
+                        options: ["DIA()", "DIASEM()", "DIASEMANA()", "NOMDIA()"],
+                        correctAnswer: 1
+                    },
+                    {
+                        question: "¿Qué función se utiliza para calcular la tasa interna de retorno de una inversión?",
+                        options: ["TIR()", "TASA()", "VNA()", "VF()"],
+                        correctAnswer: 0
+                    },
+                       
             {
-                "question": "¿Qué símbolo se usa para comenzar una fórmula en Excel?",
-                "options": ["#", "=", "$", "@"],
-                "correctAnswer": 1
+                question: "¿Qué función se utiliza para encontrar un valor en la primera columna de una tabla y devolver un valor de la misma fila en una columna especificada?",
+                options: ["BUSCARV()", "BUSCARH()", "INDICE(COINCIDIR())", "CONSULTAV()"],
+                correctAnswer: 0
             },
             {
-                "question": "¿Cuál es la función utilizada para sumar un rango de celdas?",
-                "options": ["SUMA()", "TOTAL()", "CONTAR()", "PROMEDIO()"],
-                "correctAnswer": 0
+                question: "¿Qué función se utiliza para extraer texto de una celda desde una posición específica y con una longitud determinada?",
+                options: ["EXTRAER()", "EXTRAE()", "SUBCADENA()", "IZQUIERDA()"],
+                correctAnswer: 1
             },
             {
-                "question": "¿Qué tecla permite seleccionar celdas no adyacentes?",
-                "options": ["Alt", "Shift", "Ctrl", "Tab"],
-                "correctAnswer": 2
+                question: "¿Qué función anidada se puede usar para buscar un valor en una tabla y devolver la posición de la fila?",
+                options: ["INDICE()", "COINCIDIR()", "BUSCARV()", "FILA()"],
+                correctAnswer: 1
             },
             {
-                "question": "¿Cuál es el resultado de la fórmula =5+2*3 considerando la jerarquía de operaciones?",
-                "options": ["21", "11", "17", "Error"],
-                "correctAnswer": 1
+                question: "¿Qué función se utiliza para combinar texto de diferentes celdas?",
+                options: ["CONCATENAR()", "UNIR()", "COMBINAR()", "JUNTAR()"],
+                correctAnswer: 0
             },
             {
-                "question": "¿Qué función permite encontrar el valor más alto en un rango de celdas?",
-                "options": ["MAX()", "MAYOR()", "ALTO()", "MAXIMO()"],
-                "correctAnswer": 0
+                question: "¿Qué función se utiliza para calcular el pago de un préstamo basado en pagos constantes y una tasa de interés constante?",
+                options: ["PAGO()", "PAGOINT()", "PAGOPRIN()", "NPER()"],
+                correctAnswer: 0
             },
             {
-                "question": "¿Cómo se llama la intersección de una fila y una columna en Excel?",
-                "options": ["Rango", "Tabla", "Celda", "Matriz"],
-                "correctAnswer": 2
+                question: "¿Qué tipo de referencia no cambia cuando se copia una fórmula a otra celda?",
+                options: ["Referencia relativa", "Referencia absoluta", "Referencia mixta", "Referencia dinámica"],
+                correctAnswer: 1
             },
             {
-                "question": "¿Qué combinación de teclas se usa para copiar contenido en Excel?",
-                "options": ["Ctrl+X", "Ctrl+V", "Ctrl+C", "Ctrl+Z"],
-                "correctAnswer": 2
+                question: "¿Qué función se utiliza para contar celdas que contienen números en un rango que cumple con múltiples criterios?",
+                options: ["CONTAR.SI()", "CONTAR.SI.CONJUNTO()", "SUMAR.SI()", "PROMEDIO.SI()"],
+                correctAnswer: 1
             },
             {
-                "question": "¿Qué función cuenta únicamente las celdas que contienen valores numéricos?",
-                "options": ["CONTAR()", "CONTARA()", "CONTAR.SI()", "CONTAR.BLANCO()"],
-                "correctAnswer": 0
+                question: "¿Qué función se utiliza para devolver uno de dos valores dependiendo de una condición?",
+                options: ["SI()", "Y()", "O()", "ELEGIR()"],
+                correctAnswer: 0
             },
             {
-                "question": "¿Qué símbolo indica una referencia absoluta en Excel?",
-                "options": ["&", "#", "$", "@"],
-                "correctAnswer": 2
+                question: "¿Qué función se utiliza para calcular la suma de productos de rangos correspondientes?",
+                options: ["SUMAR()", "PRODUCTO()", "SUMAPRODUCTO()", "SUMX2MY2()"],
+                correctAnswer: 2
             },
             {
-                "question": "¿Cuál es el atajo de teclado para guardar un archivo en Excel?",
-                "options": ["Ctrl+G", "Ctrl+S", "Ctrl+A", "Ctrl+B"],
-                "correctAnswer": 1
-            },
-            {
-                "question": "¿Qué tecla se usa para editar el contenido de una celda?",
-                "options": ["Enter", "F2", "Tab", "Esc"],
-                "correctAnswer": 1
-            },
-            {
-                "question": "¿Qué función calcula el promedio de un rango de celdas?",
-                "options": ["PROMEDIO()", "MEDIA()", "AVG()", "PROM()"],
-                "correctAnswer": 0
-            },
-            {
-                "question": "¿Qué combinación de teclas permite pegar solo valores en Excel?",
-                "options": ["Ctrl+V", "Alt+V", "Ctrl+Alt+V", "Shift+V"],
-                "correctAnswer": 2
-            },
-            {
-                "question": "¿Qué función redondea un número hacia abajo al entero más cercano?",
-                "options": ["REDONDEAR()", "REDONDEAR.MAS()", "REDONDEAR.MENOS()", "ENTERO()"],
-                "correctAnswer": 3
-            },
-            {
-                "question": "¿Cuál es el operador de concatenación en Excel?",
-                "options": ["&", "+", "*", "#"],
-                "correctAnswer": 0
-            },
-            {
-                "question": "¿Qué función se usa para buscar un valor en una tabla y devolver un valor relacionado?",
-                "options": ["BUSCAR()", "BUSCARV()", "COINCIDIR()", "INDICE()"],
-                "correctAnswer": 1
-            },
-            {
-                "question": "¿Qué combinación de teclas selecciona toda la hoja de cálculo?",
-                "options": ["Ctrl+A", "Ctrl+E", "Ctrl+T", "Ctrl+S"],
-                "correctAnswer": 0
-            },
-            {
-                "question": "¿Cómo se denomina una celda que contiene una fórmula que hace referencia a sí misma?",
-                "options": ["Referencia circular", "Autorreferencia", "Bucle de celda", "Referencia recursiva"],
-                "correctAnswer": 0
-            },
-            {
-                "question": "¿Qué función cuenta celdas que cumplen con un criterio específico?",
-                "options": ["CONTAR()", "CONTAR.SI()", "CONTARA()", "CONTAR.BLANCO()"],
-                "correctAnswer": 1
-            },
-            {
-                "question": "¿Qué combinación de teclas inserta una nueva hoja en Excel?",
-                "options": ["Ctrl+N", "Shift+F11", "Alt+I", "Ctrl+I"],
-                "correctAnswer": 1
-            },
-            {
-                "question": "¿Qué símbolo se usa para la multiplicación en una fórmula de Excel?",
-                "options": ["x", "*", "·", "×"],
-                "correctAnswer": 1
+                question: "¿Qué función se utiliza para encontrar el valor más pequeño en un rango?",
+                options: ["MIN()", "MENOR()", "PEQUEÑO()", "MINIMO()"],
+                correctAnswer: 0
             }
         ]
     },
