@@ -321,11 +321,12 @@ function sendResultsByEmail() {
     };
     
     // Enviar el correo
-    emailjs.send('default_service', 'template_default', emailParams)
+    emailjs.send('service_gu2z3bu', 'template_nh327cj', emailParams)
         .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
             alert('Resultados enviados por correo exitosamente');
         }, function(error) {
             console.log('FAILED...', error);
             alert('Error al enviar resultados por correo: ' + error);
-        });}
+        });
+    }
