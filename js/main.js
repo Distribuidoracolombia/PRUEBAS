@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     document.getElementById('back-to-menu').addEventListener('click', backToMenu);
+    document.getElementById('download-results').addEventListener('click', downloadResults);
     document.getElementById('email-results').addEventListener('click', sendResultsByEmail);
 });
 
