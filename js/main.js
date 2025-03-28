@@ -616,3 +616,11 @@ function downloadResults() {
     const doc = generateCertificate();
     doc.save(`certificado_${userData.fullName.replace(/\s+/g, '_')}.pdf`);
 }
+
+// Función para inicializar EmailJS
+function initEmailJS() {
+    // Inicializar con tu clave pública de EmailJS
+    // Reemplaza "your_public_key" con tu clave real
+    emailjs.init("ujydeP8ESBAm8HttQ");
+    console.log("EmailJS inicializado");
+}
