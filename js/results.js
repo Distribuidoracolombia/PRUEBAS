@@ -1,362 +1,613 @@
-// Funciones para manejar los resultados de las pruebas
-
-// Guardar resultados en localStorage
-function saveResults() {
-    localStorage.setItem('testResults_' + userData.cc, JSON.stringify(userData));
-}
-
-// Cargar resultados desde localStorage
-function loadResults() {
-    const savedData = localStorage.getItem('testResults_' + userData.cc);
-    if (savedData) {
-        return JSON.parse(savedData);
-    }
-    return null;
-}
-
-// Generar informe detallado
-function generateDetailedReport() {
-    let report = `
-    <h3>Informe Detallado</h3>
-    <p><strong>Nombre:</strong> ${userData.fullName}</p>
-    <p><strong>Cédula:</strong> ${userData.cc}</p>
-    <p><strong>Cargo:</strong> ${userData.position}</p>
-    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
-    <hr>
-    `;
-    
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        report += `
-        <h4>${testName}</h4>
-        <p><strong>Puntuación:</strong> ${result.score}%</p>
-        <p><strong>Respuestas correctas:</strong> ${result.correctAnswers} de ${result.totalQuestions}</p>
-        <p><strong>Fecha de realización:</strong> ${result.date}</p>
-        `;
-        
-        // Añadir evaluación basada en la puntuación
-        if (result.score >= 90) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-success">Excelente</span></p>`;
-        } else if (result.score >= 70) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-primary">Bueno</span></p>`;
-        } else if (result.score >= 50) {
-            report += `<p><strong>Evaluación:</strong> <span class="text-warning">Regular</span></p>`;
-        } else {
-            report += `<p><strong>Evaluación:</strong> <span class="text-danger">Necesita mejorar</span></p>`;
-        }
-        
-        // Añadir detalles de las preguntas si están disponibles
-        if (result.detailedAnswers && result.detailedAnswers.length > 0) {
-            report += `
-            <div class="mt-4">
-                <h5>Detalle de respuestas:</h5>
-                <div class="accordion" id="accordionAnswers${testId}">
-            `;
-            
-            result.detailedAnswers.forEach((answer, idx) => {
-                const accordionId = `answer-${testId}-${idx}`;
-                const statusClass = answer.isCorrect ? 'text-success' : 'text-danger';
-                const statusIcon = answer.isCorrect ? 
-                    '<i class="fas fa-check-circle text-success"></i>' : 
-                    '<i class="fas fa-times-circle text-danger"></i>';
-                
-                report += `
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading${accordionId}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                data-bs-target="#collapse${accordionId}" aria-expanded="false" 
-                                aria-controls="collapse${accordionId}">
-                            ${statusIcon} Pregunta ${idx + 1}: ${answer.question.substring(0, 50)}${answer.question.length > 50 ? '...' : ''}
-                        </button>
-                    </h2>
-                    <div id="collapse${accordionId}" class="accordion-collapse collapse" 
-                         aria-labelledby="heading${accordionId}" data-bs-parent="#accordionAnswers${testId}">
-                        <div class="accordion-body">
-                            <p><strong>Pregunta:</strong> ${answer.question} ${answer.context ? `(${answer.context})` : ''}</p>
-                            <p><strong>Tu respuesta:</strong> <span class="${statusClass}">${answer.options[answer.userAnswer]}</span></p>
-                            <p><strong>Respuesta correcta:</strong> ${answer.options[answer.correctAnswer]}</p>
-                        </div>
-                    </div>
-                </div>
-                `;
-            });
-            
-            report += `
-                </div>
-            </div>
-            `;
-        }
-        
-        report += `<hr>`;
-    });
-    
-    // Añadir evaluación general
-    let totalScore = 0;
-    let testsCount = Object.keys(userData.testResults).length;
-    
-    Object.values(userData.testResults).forEach(result => {
-        totalScore += result.score;
-    });
-    
-    const averageScore = totalScore / testsCount;
-    
-    report += `
-    <h4>Evaluación General</h4>
-    <p><strong>Puntuación promedio:</strong> ${Math.round(averageScore)}%</p>
-    `;
-    
-    if (averageScore >= 90) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-success">Excelente</span></p>`;
-    } else if (averageScore >= 70) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-primary">Bueno</span></p>`;
-    } else if (averageScore >= 50) {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-warning">Regular</span></p>`;
-    } else {
-        report += `<p><strong>Evaluación general:</strong> <span class="text-danger">Necesita mejorar</span></p>`;
-    }
-    
-    return report;
-}
-
-// Generar certificado
-function generateCertificate() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Título
-    doc.setFontSize(22);
-    doc.setTextColor(0, 102, 204);
-    doc.text('Certificado de Evaluación', 105, 30, { align: 'center' });
-    
-    // Línea decorativa
-    doc.setDrawColor(0, 102, 204);
-    doc.setLineWidth(1);
-    doc.line(20, 40, 190, 40);
-    
-    // Contenido
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(16);
-    doc.text('Se certifica que:', 105, 60, { align: 'center' });
-    
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text(userData.fullName, 105, 75, { align: 'center' });
-    
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Cargo: ${userData.position}`, 105, 90, { align: 'center' });
-    
-    doc.setFontSize(16);
-    doc.text('Ha completado satisfactoriamente las siguientes evaluaciones:', 105, 110, { align: 'center' });
-    
-    // Resultados
-    let yPosition = 130;
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        doc.setFontSize(14);
-        doc.text(`${testName}: ${result.score}%`, 105, yPosition, { align: 'center' });
-        
-        yPosition += 15;
-    });
-    
-    // Fecha
-    doc.setFontSize(12);
-    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 105, 230, { align: 'center' });
-    
-    // Firma
-    doc.setDrawColor(0, 0, 0);
-    doc.line(70, 210, 140, 210);
-    doc.setFontSize(12);
-    doc.text('Firma del evaluador', 105, 220, { align: 'center' });
-    
-    return doc;
-}
-
-// Exportar resultados a Excel (simulado con CSV)
-function exportToCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    
-    // Encabezados
-    csvContent += "Nombre,Cargo,Prueba,Puntuación,Respuestas Correctas,Total Preguntas,Fecha\n";
-    
-    // Datos
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        csvContent += `${userData.fullName},${userData.position},${testName},${result.score}%,${result.correctAnswers},${result.totalQuestions},${result.date}\n`;
-    });
-    
-    // Crear enlace de descarga
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `resultados_${userData.fullName.replace(/\s+/g, '_')}_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
-    document.body.appendChild(link);
-    
-    // Descargar archivo
-    link.click();
-    
-    // Eliminar enlace
-    document.body.removeChild(link);
-}
-
-// Inicializar EmailJS
-function initEmailJS() {
-    // Solo se necesita el public key para la inicialización
-    emailjs.init("ujydeP8ESBAm8HttQ");
-}
-
-// Función para generar un informe muy simplificado para correo
-function generateVerySimpleEmailReport() {
-    let report = `<h3>Informe de Resultados</h3>
-    <p><strong>Nombre:</strong> ${userData.fullName}</p>
-    <p><strong>Cédula:</strong> ${userData.cc}</p>
-    <p><strong>Cargo:</strong> ${userData.position}</p>
-    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
-    <hr>`;
-    
-    Object.keys(userData.testResults).forEach(testId => {
-        const result = userData.testResults[testId];
-        const testName = tests[testId].title;
-        
-        report += `<h4>${testName}</h4>
-        <p><strong>Puntuación:</strong> ${result.score}%</p>
-        <p><strong>Respuestas correctas:</strong> ${result.correctAnswers} de ${result.totalQuestions}</p>
-        <p><strong>Fecha de realización:</strong> ${result.date}</p>`;
-        
-        // Evaluación sin formato HTML complejo
-        if (result.score >= 90) {
-            report += `<p><strong>Evaluación:</strong> Excelente</p>`;
-        } else if (result.score >= 70) {
-            report += `<p><strong>Evaluación:</strong> Bueno</p>`;
-        } else if (result.score >= 50) {
-            report += `<p><strong>Evaluación:</strong> Regular</p>`;
-        } else {
-            report += `<p><strong>Evaluación:</strong> Necesita mejorar</p>`;
-        }
-        
-        // Añadir detalles de las preguntas si están disponibles
-        if (result.detailedAnswers && result.detailedAnswers.length > 0) {
-            report += `<h5>Detalle de respuestas:</h5>
-            <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
-                <tr style="background-color: #f2f2f2;">
-                    <th style="text-align: left;">Pregunta</th>
-                    <th style="text-align: left;">Respuesta del usuario</th>
-                    <th style="text-align: left;">Respuesta correcta</th>
-                    <th style="text-align: center;">Estado</th>
-                </tr>`;
-            
-            result.detailedAnswers.forEach((answer, idx) => {
-                const isCorrect = answer.isCorrect;
-                const statusIcon = isCorrect ? '✓' : '✗';
-                const statusColor = isCorrect ? 'green' : 'red';
-                
-                report += `<tr>
-                    <td>${answer.question} ${answer.context ? `(${answer.context})` : ''}</td>
-                    <td>${answer.options[answer.userAnswer]}</td>
-                    <td>${answer.options[answer.correctAnswer]}</td>
-                    <td style="text-align: center; color: ${statusColor};">${statusIcon}</td>
-                </tr>`;
-            });
-            
-            report += `</table>`;
-        } else {
-            report += `<p><em>No hay información detallada disponible para esta prueba.</em></p>`;
-        }
-        
-        report += `<hr>`;
-    });
-    
-    // Evaluación general simplificada
-    let totalScore = 0;
-    let testsCount = Object.keys(userData.testResults).length;
-    
-    Object.values(userData.testResults).forEach(result => {
-        totalScore += result.score;
-    });
-    
-    const averageScore = totalScore / testsCount;
-    
-    report += `<h4>Evaluación General</h4>
-    <p><strong>Puntuación promedio:</strong> ${Math.round(averageScore)}%</p>`;
-    
-    if (averageScore >= 90) {
-        report += `<p><strong>Evaluación general:</strong> Excelente</p>`;
-    } else if (averageScore >= 70) {
-        report += `<p><strong>Evaluación general:</strong> Bueno</p>`;
-    } else if (averageScore >= 50) {
-        report += `<p><strong>Evaluación general:</strong> Regular</p>`;
-    } else {
-        report += `<p><strong>Evaluación general:</strong> Necesita mejorar</p>`;
-    }
-    
-    return report;
-}
-
-// Modificar la función sendResultsByEmail para usar el informe muy simplificado
-function sendResultsByEmail() {
-    // Usar el informe muy simplificado para el correo
-    const htmlContent = generateVerySimpleEmailReport();
-    
-    // Preparar los parámetros para el correo con contenido mínimo
-    const templateParams = {
-        to_email: "gestionhumana@luma.com.co",
-        from_name: "Resultados Pruebas ",
-        to_name: "Gestion Humana",
-        cc_email: "auxiliargh@luma.com.co", // Puedes añadir correos en copia si lo necesitas
-        subject: `Resultados de evaluación - ${userData.fullName}`,
-        message: `<p>Se adjuntan los resultados de la evaluación realizada por:</p>
-        <p><strong>Nombre:</strong> ${userData.fullName}</p>
-        <p><strong>Cargo:</strong> ${userData.position}</p>
-        <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>`,
-        results_html: htmlContent
-    };
-    
-    // Mostrar indicador de carga
-    document.getElementById('email-results').disabled = true;
-    document.getElementById('email-results').innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
-    
-    // Verificar que EmailJS esté inicializado
-    if (typeof emailjs === 'undefined') {
-        console.error('EmailJS no está cargado correctamente');
-        alert('Error al enviar el correo: El servicio de correo no está disponible');
-        document.getElementById('email-results').disabled = false;
-        document.getElementById('email-results').textContent = 'Enviar por Correo';
-        return;
-    }
-    
-    // Enviar el correo usando EmailJS
-    emailjs.send("service_gu2z3bu", "template_nh327cj", templateParams)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            alert('Los resultados han sido enviados correctamente al correo auxsistemas@luma.com.co');
-            
-            // Restaurar el botón
-            document.getElementById('email-results').disabled = false;
-            document.getElementById('email-results').textContent = 'Enviar por Correo';
-        }, function(error) {
-            console.log('FAILED...', error);
-            
-            // Mensaje de error más específico
-            let errorMsg = 'Error al enviar los resultados. ';
-            if (error.status === 404) {
-                errorMsg += 'Cuenta de EmailJS no encontrada o inválida.';
-            } else if (error.status === 400) {
-                errorMsg += 'Parámetros de plantilla incorrectos.';
-            } else if (error.status === 403) {
-                errorMsg += 'Acceso denegado. Verifique su clave pública.';
-            } else {
-                errorMsg += 'Por favor, inténtelo de nuevo más tarde.';
+const tests = {
+    "ortografia-basico": {
+        title: "Prueba de Ortografía Básica",
+        timeLimit: 600, // 10 minutos
+        questions: [
+            {
+                question: "¿Cuál de las siguientes palabras está escrita correctamente?",
+                options: ["Examen", "Exámen", "Excamen", "Exsamen"],
+                correctAnswer: 0
+            },
+            {
+                question: "Selecciona la palabra correctamente escrita:",
+                options: ["Vació", "Vacio", "Vacío", "Vasío"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Voy a _____ si puedo resolver este problema.",
+                options: ["Haber", "A ver", "Aber", "Abe"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra con error ortográfico:",
+                options: ["Biblioteca", "Adolescente", "Ajendrar", "Conocimiento"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "_____ está el libro que buscabas.",
+                options: ["Hay", "Ay", "Ahí", "Ai"],
+                correctAnswer: 2
+            },
+            {
+                question: "Selecciona la oración con la puntuación correcta:",
+                options: [
+                    "Juan, mi hermano, es médico.",
+                    "Juan mi hermano, es médico.",
+                    "Juan, mi hermano es médico.",
+                    "Juan mi hermano es, médico."
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cuál de estas palabras debe llevar tilde?",
+                options: ["Examen", "Resumen", "Volumen", "Dictamen"],
+                correctAnswer: 0
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Absorver", "Absolver", "Absorber", "Abssorber"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Él _____ terminado su trabajo.",
+                options: ["A", "Ha", "Ah", "Há"],
+                correctAnswer: 1
+            },
+            {
+                question: "Selecciona la palabra con la acentuación correcta:",
+                options: ["Fácilmente", "Facilménte", "Fácilménte", "Facilmente"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "_____ a comprar pan.",
+                options: ["Valla", "Vaya", "Baya", "Balla"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Ayer", "Alludante", "Alludar", "Hallar"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Cuál de las siguientes palabras lleva tilde?",
+                options: ["Cesped", "Lapiz", "Margen", "Cielo"],
+                correctAnswer: 1
+            },
+            {
+                question: "Selecciona la palabra con la acentuación correcta:",
+                options: ["Examén", "Exámen", "Examen", "Éxamen"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "No quiero café _____ té.",
+                options: ["Sino", "Si no", "Sinó", "Sí no"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra con error ortográfico:",
+                options: ["Caballo", "Desarrollo", "Llabe", "Brillante"],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál es la forma correcta?",
+                context: "Ya he _____ la tarea.",
+                options: ["Hecho", "Echo", "Eko", "Heco"],
+                correctAnswer: 0
+            },
+            {
+                question: "Selecciona la oración con la puntuación correcta:",
+                options: [
+                    "María, compró pan, leche y huevos.",
+                    "María compró, pan, leche y huevos.",
+                    "María compró pan, leche y huevos.",
+                    "María compró pan leche, y huevos."
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Cuál de estas palabras debe llevar tilde?",
+                options: ["Mesa", "Lapiz", "Libro", "Reloj"],
+                correctAnswer: 1
+            },
+            {
+                question: "Identifica la palabra correctamente escrita:",
+                options: ["Vevida", "Bebida", "Bevida", "Bebída"],
+                correctAnswer: 1
             }
-            
-            alert(errorMsg);
-            
-            // Restaurar el botón
-            document.getElementById('email-results').disabled = false;
-            document.getElementById('email-results').textContent = 'Enviar por Correo';
-        });}
+        ]
+    },
+    "ortografia-medio": {
+    "title": "Prueba de Ortografía Nivel Medio",
+    "timeLimit": 600, // 10 minutos
+    "questions": [
+        {
+            "question": "¿Cuál de las siguientes palabras está escrita correctamente?",
+            "options": ["Idiosincracia", "Idiosincrasia", "Idiosincracia", "Idiosincrasía"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de las siguientes oraciones usa correctamente 'porque', 'por qué', 'por que' o 'porqué'?",
+            "options": [
+                "No sé por qué no vino a la fiesta.",
+                "No sé porque no vino a la fiesta.",
+                "No sé porqué no vino a la fiesta.",
+                "No sé por que no vino a la fiesta."
+            ],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Cuál de estas palabras está escrita correctamente?",
+            "options": ["Exhuberante", "Exuberante", "Exuverante", "Exhauberante"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de las siguientes palabras contiene un error ortográfico?",
+            "options": ["Convalecencia", "Adolescencia", "Efervecencia", "Paciencia"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Cuál es el plural correcto de 'régimen'?",
+            "options": ["Régimenes", "Regímenes", "Régimens", "Regímens"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿En cuál de estas oraciones el uso de la coma es correcto?",
+            "options": [
+                "Los invitados, que llegaron tarde, se perdieron el discurso.",
+                "Los invitados que, llegaron tarde, se perdieron el discurso.",
+                "Los invitados que llegaron tarde, se perdieron el discurso.",
+                "Los invitados, que llegaron tarde se perdieron el discurso."
+            ],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Cuál es la palabra correcta para completar la siguiente oración?",
+            "context": "El peligro era _____.",
+            "options": ["Eminente", "Inminente", "Iminente", "Emminente"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de estas palabras está escrita correctamente?",
+            "options": ["Escacés", "Escases", "Escasez", "Escaséz"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Cuál es la forma correcta para completar la oración?",
+            "context": "Sufre una _____ a las drogas.",
+            "options": ["Adición", "Adicción", "Addicción", "Adisión"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de las siguientes palabras tiene la acentuación correcta?",
+            "options": ["Heróico", "Heroico", "Héroico", "Heroíco"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál es el plural correcto de 'carácter'?",
+            "options": ["Carácteres", "Caracteres", "Carácters", "Caracterés"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de estas palabras está escrita correctamente?",
+            "options": ["Exhuberante", "Exuberante", "Hexuberante", "Exuverante"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál es la forma correcta para completar la oración?",
+            "context": "Vamos _____ si terminamos a tiempo.",
+            "options": ["Haber", "A ver", "Haver", "Aber"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de las siguientes palabras tiene un error ortográfico?",
+            "options": ["Exhaustivo", "Exhuberante", "Exhibición", "Exhortar"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de las siguientes oraciones usa correctamente la palabra 'sino'?",
+            "options": [
+                "No quiero café sino té.",
+                "No quiero café si no té.",
+                "No quiero café si nó té.",
+                "No quiero café sinó té."
+            ],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿En cuál de estas oraciones el uso de 'demás' o 'de más' es correcto?",
+            "options": [
+                "Los demás estudiantes ya se fueron.",
+                "Los de más estudiantes ya se fueron.",
+                "Los demas estudiantes ya se fueron.",
+                "Los de mas estudiantes ya se fueron."
+            ],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Cuál de estas palabras está correctamente escrita?",
+            "options": ["Translúcido", "Traslúcido", "Translucido", "Traslucido"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de estas palabras está escrita correctamente?",
+            "options": ["Absorver", "Absolver", "Absorber", "Abssorber"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Cuál es la forma correcta para completar la oración?",
+            "context": "Espero que _____ terminado para mañana.",
+            "options": ["Halla", "Haya", "Alla", "Aya"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál de estas palabras tiene la acentuación correcta?",
+            "options": ["Exámen", "Examén", "Examen", "Éxamen"],
+            "correctAnswer": 2
+        }
+    ]
+},
+   "excel-basico": {
+    "title": "Prueba de Excel Básico",
+    "timeLimit": 600, // 10 minutos
+    "questions": [
+        {
+            "question": "¿Qué símbolo se usa para comenzar una fórmula en Excel?",
+            "options": ["#", "=", "$", "@"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Cuál es la función utilizada para sumar un rango de celdas?",
+            "options": ["SUMA()", "TOTAL()", "CONTAR()", "PROMEDIO()"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Qué tecla permite seleccionar celdas no adyacentes?",
+            "options": ["Alt", "Shift", "Ctrl", "Tab"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Cuál es el resultado de la fórmula =5+2*3 considerando la jerarquía de operaciones?",
+            "options": ["21", "11", "17", "Error"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué función permite encontrar el valor más alto en un rango de celdas?",
+            "options": ["MAX()", "MAYOR()", "ALTO()", "MAXIMO()"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Cómo se llama la intersección de una fila y una columna en Excel?",
+            "options": ["Rango", "Tabla", "Celda", "Matriz"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Qué combinación de teclas se usa para copiar contenido en Excel?",
+            "options": ["Ctrl+X", "Ctrl+V", "Ctrl+C", "Ctrl+Z"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Qué función cuenta únicamente las celdas que contienen valores numéricos?",
+            "options": ["CONTAR()", "CONTARA()", "CONTAR.SI()", "CONTAR.BLANCO()"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Qué símbolo indica una referencia absoluta en Excel?",
+            "options": ["&", "#", "$", "@"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Cuál es el atajo de teclado para guardar un archivo en Excel?",
+            "options": ["Ctrl+G", "Ctrl+S", "Ctrl+A", "Ctrl+B"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué tecla se usa para editar el contenido de una celda?",
+            "options": ["Enter", "F2", "Tab", "Esc"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué función calcula el promedio de un rango de celdas?",
+            "options": ["PROMEDIO()", "MEDIA()", "AVG()", "PROM()"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Qué combinación de teclas permite pegar solo valores en Excel?",
+            "options": ["Ctrl+V", "Alt+V", "Ctrl+Alt+V", "Shift+V"],
+            "correctAnswer": 2
+        },
+        {
+            "question": "¿Qué función redondea un número hacia abajo al entero más cercano?",
+            "options": ["REDONDEAR()", "REDONDEAR.MAS()", "REDONDEAR.MENOS()", "ENTERO()"],
+            "correctAnswer": 3
+        },
+        {
+            "question": "¿Cuál es el operador de concatenación en Excel?",
+            "options": ["&", "+", "*", "#"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Qué función se usa para buscar un valor en una tabla y devolver un valor relacionado?",
+            "options": ["BUSCAR()", "BUSCARV()", "COINCIDIR()", "INDICE()"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué combinación de teclas selecciona toda la hoja de cálculo?",
+            "options": ["Ctrl+A", "Ctrl+E", "Ctrl+T", "Ctrl+S"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Cómo se denomina una celda que contiene una fórmula que hace referencia a sí misma?",
+            "options": ["Referencia circular", "Autorreferencia", "Bucle de celda", "Referencia recursiva"],
+            "correctAnswer": 0
+        },
+        {
+            "question": "¿Qué función cuenta celdas que cumplen con un criterio específico?",
+            "options": ["CONTAR()", "CONTAR.SI()", "CONTARA()", "CONTAR.BLANCO()"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué combinación de teclas inserta una nueva hoja en Excel?",
+            "options": ["Ctrl+N", "Shift+F11", "Alt+I", "Ctrl+I"],
+            "correctAnswer": 1
+        },
+        {
+            "question": "¿Qué símbolo se usa para la multiplicación en una fórmula de Excel?",
+            "options": ["x", "*", "·", "×"],
+            "correctAnswer": 1
+        }
+    ]
+}, 
+    "excel-basico": {
+        "title": "Prueba de Excel Básico",
+        "timeLimit": 600,
+        "questions": [
+            {
+                "question": "¿Qué símbolo se usa para comenzar una fórmula en Excel?",
+                "options": ["#", "=", "$", "@"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Cuál es la función utilizada para sumar un rango de celdas?",
+                "options": ["SUMA()", "TOTAL()", "CONTAR()", "PROMEDIO()"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Qué tecla permite seleccionar celdas no adyacentes?",
+                "options": ["Alt", "Shift", "Ctrl", "Tab"],
+                "correctAnswer": 2
+            },
+            {
+                "question": "¿Cuál es el resultado de la fórmula =5+2*3 considerando la jerarquía de operaciones?",
+                "options": ["21", "11", "17", "Error"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué función permite encontrar el valor más alto en un rango de celdas?",
+                "options": ["MAX()", "MAYOR()", "ALTO()", "MAXIMO()"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Cómo se llama la intersección de una fila y una columna en Excel?",
+                "options": ["Rango", "Tabla", "Celda", "Matriz"],
+                "correctAnswer": 2
+            },
+            {
+                "question": "¿Qué combinación de teclas se usa para copiar contenido en Excel?",
+                "options": ["Ctrl+X", "Ctrl+V", "Ctrl+C", "Ctrl+Z"],
+                "correctAnswer": 2
+            },
+            {
+                "question": "¿Qué función cuenta únicamente las celdas que contienen valores numéricos?",
+                "options": ["CONTAR()", "CONTARA()", "CONTAR.SI()", "CONTAR.BLANCO()"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Qué símbolo indica una referencia absoluta en Excel?",
+                "options": ["&", "#", "$", "@"],
+                "correctAnswer": 2
+            },
+            {
+                "question": "¿Cuál es el atajo de teclado para guardar un archivo en Excel?",
+                "options": ["Ctrl+G", "Ctrl+S", "Ctrl+A", "Ctrl+B"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué tecla se usa para editar el contenido de una celda?",
+                "options": ["Enter", "F2", "Tab", "Esc"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué función calcula el promedio de un rango de celdas?",
+                "options": ["PROMEDIO()", "MEDIA()", "AVG()", "PROM()"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Qué combinación de teclas permite pegar solo valores en Excel?",
+                "options": ["Ctrl+V", "Alt+V", "Ctrl+Alt+V", "Shift+V"],
+                "correctAnswer": 2
+            },
+            {
+                "question": "¿Qué función redondea un número hacia abajo al entero más cercano?",
+                "options": ["REDONDEAR()", "REDONDEAR.MAS()", "REDONDEAR.MENOS()", "ENTERO()"],
+                "correctAnswer": 3
+            },
+            {
+                "question": "¿Cuál es el operador de concatenación en Excel?",
+                "options": ["&", "+", "*", "#"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Qué función se usa para buscar un valor en una tabla y devolver un valor relacionado?",
+                "options": ["BUSCAR()", "BUSCARV()", "COINCIDIR()", "INDICE()"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué combinación de teclas selecciona toda la hoja de cálculo?",
+                "options": ["Ctrl+A", "Ctrl+E", "Ctrl+T", "Ctrl+S"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Cómo se denomina una celda que contiene una fórmula que hace referencia a sí misma?",
+                "options": ["Referencia circular", "Autorreferencia", "Bucle de celda", "Referencia recursiva"],
+                "correctAnswer": 0
+            },
+            {
+                "question": "¿Qué función cuenta celdas que cumplen con un criterio específico?",
+                "options": ["CONTAR()", "CONTAR.SI()", "CONTARA()", "CONTAR.BLANCO()"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué combinación de teclas inserta una nueva hoja en Excel?",
+                "options": ["Ctrl+N", "Shift+F11", "Alt+I", "Ctrl+I"],
+                "correctAnswer": 1
+            },
+            {
+                "question": "¿Qué símbolo se usa para la multiplicación en una fórmula de Excel?",
+                "options": ["x", "*", "·", "×"],
+                "correctAnswer": 1
+            }
+        ]
+    },
+    "cajera-pdv": {
+        title: "Prueba para Cajera de Punto de Venta",
+        timeLimit: 600, // 10 minutos
+        questions: [
+            {
+                question: "¿Qué información debe verificar en una tarjeta de crédito antes de procesarla?",
+                options: [
+                    "Solo el nombre del titular",
+                    "Nombre del titular, fecha de vencimiento y que la tarjeta esté firmada",
+                    "Solo la fecha de vencimiento",
+                    "Solo el número de la tarjeta"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Un cliente compra productos por $85.000 y tiene un cupón de 10% de descuento. ¿Cuánto debe pagar?",
+                options: ["$76.500", "$75.000", "$80.000", "$77.500"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Qué debe hacer si un cliente solicita factura con datos fiscales?",
+                options: [
+                    "Emitir una factura normal",
+                    "Solicitar los datos fiscales completos y emitir una factura con esos datos",
+                    "Decir que no es posible emitir ese tipo de factura",
+                    "Pedir que regrese otro día"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es el procedimiento correcto para una devolución de dinero?",
+                options: [
+                    "Devolver el dinero sin preguntar",
+                    "Verificar el producto, la factura, registrar la devolución en el sistema y devolver el dinero por el mismo medio de pago original",
+                    "Negar todas las devoluciones",
+                    "Ofrecer solo cambio por otro producto"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer si el sistema indica que un producto tiene descuento pero el cliente dice que el descuento debería ser mayor?",
+                options: [
+                    "Aplicar el descuento que pide el cliente",
+                    "Verificar en el sistema o con el supervisor el descuento correcto y explicar amablemente al cliente",
+                    "Ignorar al cliente y cobrar sin descuento",
+                    "Llamar a seguridad"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cómo debe manejar un reclamo de un cliente insatisfecho?",
+                options: [
+                    "Ignorarlo y seguir atendiendo a otros clientes",
+                    "Escuchar atentamente, mostrar empatía, ofrecer una solución y, si es necesario, llamar a un supervisor",
+                    "Discutir con el cliente para demostrar que está equivocado",
+                    "Pedir al cliente que se retire"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer al final de su turno con el dinero de la caja?",
+                options: [
+                    "Llevárselo a casa y entregarlo al día siguiente",
+                    "Contar el dinero, cuadrar la caja, llenar el formato de cierre y entregar al supervisor",
+                    "Dejarlo en la caja para el siguiente turno",
+                    "Depositarlo en su cuenta bancaria"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué información debe incluir un recibo de venta?",
+                options: [
+                    "Solo el monto total",
+                    "Fecha, productos, precios, subtotal, impuestos, total y forma de pago",
+                    "Solo los productos y el precio",
+                    "Solo la fecha y el monto"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Un cliente compra una moto de $12.000.000 y quiere financiar el 70%. ¿Cuánto debe pagar como inicial?",
+                options: ["$3.600.000", "$8.400.000", "$4.000.000", "$5.000.000"],
+                correctAnswer: 0
+            },
+            {
+                question: "¿Qué debe hacer si detecta que un producto no tiene código de barras o precio?",
+                options: [
+                    "Asignarle cualquier precio",
+                    "No vender el producto",
+                    "Consultar el precio con el departamento correspondiente antes de procesarlo",
+                    "Regalarlo al cliente"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "¿Qué debe hacer si un cliente olvida su cambio o tarjeta de crédito?",
+                options: [
+                    "Quedarse con el dinero o destruir la tarjeta",
+                    "Guardar el cambio o tarjeta, registrarlo en el sistema y notificar al supervisor",
+                    "Usar el dinero para cuadrar la caja",
+                    "No hacer nada, es responsabilidad del cliente"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Cuál es la mejor forma de organizar los billetes en la caja?",
+                options: [
+                    "Todos mezclados",
+                    "Ordenados por denominación y con los billetes en la misma dirección",
+                    "Solo separar billetes grandes de pequeños",
+                    "No importa mientras estén dentro de la caja"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué debe hacer si un cliente quiere pagar parte en efectivo y parte con tarjeta?",
+                options: [
+                    "No aceptar este tipo de pago",
+                    "Procesar primero el pago en efectivo, luego el de tarjeta y registrar ambos en el sistema",
+                    "Pedir que elija solo una forma de pago",
+                    "Cobrar todo en efectivo y quedarse con la diferencia"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué información debe solicitar para una venta a crédito de un electrodoméstico?",
+                options: [
+                    "Solo el nombre del cliente",
+                    "Documento de identidad, comprobantes de ingresos, referencias y completar la solicitud de crédito",
+                    "Solo un número de teléfono",
+                    "Solo la dirección del cliente"
+                ],
+                correctAnswer: 1
+            }
+        ]
+    }
+}
+
