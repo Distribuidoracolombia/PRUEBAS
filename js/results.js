@@ -307,13 +307,13 @@ function sendResultsByEmail() {
     
     // Preparar parámetros del correo con múltiples destinatarios
     const emailParams = {
-        to_email: ",gestionhumana@luma.com.co,auxsistemas@luma.com.co",
+        to_email: "gestionhumana@luma.com.co",
         to_name: "Recursos Humanos",
         from_name: "Sistema de Evaluación",
         subject: `Resultados de Evaluación - ${userData.fullName}`,
         message: emailReport,
         reply_to: "noreply@luma.com.co",
-        cc_email: "auxiliargh@luma.com.co", // Puedes añadir correos en copia si lo necesitas
+        cc_email: "auxiliargh@luma.com", // Puedes añadir correos en copia si lo necesitas
         user_name: userData.fullName,
         user_position: userData.position,
         user_document: `${userData.documentType.toUpperCase()}: ${userData.cc}`,
@@ -328,5 +328,4 @@ function sendResultsByEmail() {
         }, function(error) {
             console.log('FAILED...', error);
             alert('Error al enviar resultados por correo: ' + error);
-        });
-    }
+        });}
