@@ -427,11 +427,7 @@ const tests = {
                         options: ["CONCATENAR()", "UNIR()", "COMBINAR()", "JUNTAR()"],
                         correctAnswer: 0
                     },
-                    {
-                        question: "¿Qué función se utiliza para calcular el pago de un préstamo basado en pagos constantes y una tasa de interés constante?",
-                        options: ["PAGO()", "PAGOINT()", "PAGOPRIN()", "NPER()"],
-                        correctAnswer: 0
-                    },
+                   
                     {
                         question: "¿Qué tipo de referencia no cambia cuando se copia una fórmula a otra celda?",
                         options: ["Referencia relativa", "Referencia absoluta", "Referencia mixta", "Referencia dinámica"],
@@ -478,12 +474,7 @@ const tests = {
                         options: ["DIA()", "DIASEM()", "DIASEMANA()", "NOMDIA()"],
                         correctAnswer: 1
                     },
-                    {
-                        question: "¿Qué función se utiliza para calcular la tasa interna de retorno de una inversión?",
-                        options: ["TIR()", "TASA()", "VNA()", "VF()"],
-                        correctAnswer: 0
-                    },
-                       
+                                          
             {
                 question: "¿Qué función se utiliza para encontrar un valor en la primera columna de una tabla y devolver un valor de la misma fila en una columna especificada?",
                 options: ["BUSCARV()", "BUSCARH()", "INDICE(COINCIDIR())", "CONSULTAV()"],
@@ -504,12 +495,7 @@ const tests = {
                 options: ["CONCATENAR()", "UNIR()", "COMBINAR()", "JUNTAR()"],
                 correctAnswer: 0
             },
-            {
-                question: "¿Qué función se utiliza para calcular el pago de un préstamo basado en pagos constantes y una tasa de interés constante?",
-                options: ["PAGO()", "PAGOINT()", "PAGOPRIN()", "NPER()"],
-                correctAnswer: 0
-            },
-            {
+                      {
                 question: "¿Qué tipo de referencia no cambia cuando se copia una fórmula a otra celda?",
                 options: ["Referencia relativa", "Referencia absoluta", "Referencia mixta", "Referencia dinámica"],
                 correctAnswer: 1
