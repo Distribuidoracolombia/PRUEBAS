@@ -314,7 +314,7 @@ function sendResultsByEmail() {
             subject: `Resultados de Evaluación - ${userData.fullName}`,
             message: emailReport,
             reply_to: "noreply@luma.com.co",
-            cc_email: "auxiliargh@luma.com", // Puedes añadir correos en copia si lo necesitas
+            cc: "auxiliargh@luma.com", // Puedes añadir correos en copia si lo necesitas
             user_name: userData.fullName,
             user_position: userData.position,
             user_document: `${userData.documentType.toUpperCase()}: ${userData.cc}`,
