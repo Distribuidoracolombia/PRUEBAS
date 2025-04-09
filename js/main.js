@@ -521,8 +521,8 @@ function validarDocumento(tipo, numero) {
     
     switch(tipo) {
         case 'cc': // Cédula de ciudadanía colombiana
-            // Debe ser numérica y tener entre 8 y 10 dígitos
-            return /^\d{8,10}$/.test(numero);
+            // Debe ser numérica y tener entre 7 y 10 dígitos
+            return /^\d{7,10}$/.test(numero);
         
         case 'ce': // Cédula de extranjería
             // Debe comenzar con letra o número y tener entre 6 y 12 caracteres
